@@ -42,7 +42,9 @@
       "Bash(wmic process where:*)",
       "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" update_database_schema.py)",
       "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" check_detailed_data.py)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(move page.tsx page-debug.tsx)",
+      "Bash(move page-original.tsx page.tsx)"
     ],
     "deny": [],
     "ask": []
