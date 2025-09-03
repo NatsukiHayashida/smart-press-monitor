@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             org_id: defaultOrgId,
             email: user?.email,
             full_name: user?.user_metadata?.full_name || user?.email
-          })
+          } as any)
           .select()
           .single()
         

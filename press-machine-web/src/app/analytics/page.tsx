@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
 
         latestMaintenanceByMachine.push({
           machine_number: machine.machine_number,
-          latest_maintenance: maintenanceData?.[0]?.maintenance_datetime || null
+          latest_maintenance: (maintenanceData as any)?.[0]?.maintenance_datetime || null
         })
       }
 
