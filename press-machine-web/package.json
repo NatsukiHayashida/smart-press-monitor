@@ -2,6 +2,7 @@
   "name": "press-machine-web",
   "private": true,
   "scripts": {
+    "prebuild": "node -e \"console.log('[DEBUG] CWD=', process.cwd()); try{ const p=require('./package.json'); console.log('[DEBUG] has next =', !!(p.dependencies && p.dependencies.next)); console.log('[DEBUG] next version =', p.dependencies && p.dependencies.next); }catch(e){ console.error('[DEBUG] package.json not readable', e); }\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
