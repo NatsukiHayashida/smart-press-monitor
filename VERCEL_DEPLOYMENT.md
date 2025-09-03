@@ -26,8 +26,10 @@ NEXT_PUBLIC_DEFAULT_ORG_ID=c897453e-14c7-4335-bdb4-91978778d95b
 ## デプロイ設定
 
 ### Root Directory
-プロジェクトのRoot Directoryは **ルート（/）** のままにしてください。
-`vercel.json` がサブディレクトリ構造を処理します。
+**重要**: プロジェクトのRoot Directoryを **`press-machine-web`** に設定してください。
+1. Vercel Dashboard → Settings → General
+2. Root Directory を `press-machine-web` に変更
+3. Save をクリック
 
 ### Framework Preset
 **Next.js** を選択

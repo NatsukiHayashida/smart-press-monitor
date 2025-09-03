@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "framework": "nextjs",
-  "installCommand": "cd press-machine-web && npm install",
-  "buildCommand": "cd press-machine-web && npm run build",
-  "outputDirectory": "press-machine-web/.next",
-  "regions": ["hnd1"]
-}

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "regions": ["hnd1"],
+  "functions": {
+    ".next/server/**/*.js": {
+      "maxDuration": 10
+    }
+  }
+}
