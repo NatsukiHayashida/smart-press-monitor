@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useAuth } from '@/components/auth/AuthProvider-minimal'
 import { Button } from '@/components/ui/button'
 
 export function Header() {
-  const { user, profile, signOut } = useAuth()
+  const { user, profile } = useAuth()
 
   return (
     <header className="bg-white shadow-sm border-b">
@@ -44,11 +44,11 @@ export function Header() {
             {user ? (
               <div className="flex items-center space-x-3">
                 <span className="text-sm text-gray-600">
-                  {profile?.full_name || user.email}
+                  ようこそ、{profile?.full_name || user.email}さん
                 </span>
-                <Button variant="outline" onClick={signOut}>
-                  ログアウト
-                </Button>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                  ログイン中
+                </span>
               </div>
             ) : (
               <Link href="/auth/login">

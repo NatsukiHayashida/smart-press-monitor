@@ -57,9 +57,9 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>機械番号</TableHead>
-                <TableHead>設備番号</TableHead>
+                <TableHead className="text-center">ID</TableHead>
+                <TableHead className="text-center">機械番号</TableHead>
+                <TableHead className="text-center">設備番号</TableHead>
                 <TableHead>メーカー</TableHead>
                 <TableHead>型式</TableHead>
                 <TableHead>種別</TableHead>
@@ -79,9 +79,9 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
               ) : (
                 filteredMachines.map((machine) => (
                   <TableRow key={machine.id}>
-                    <TableCell className="font-mono text-sm">{machine.id}</TableCell>
-                    <TableCell className="font-semibold">{machine.machine_number}</TableCell>
-                    <TableCell>{machine.equipment_number || '-'}</TableCell>
+                    <TableCell className="font-mono text-sm text-center text-blue-600">{machine.id}</TableCell>
+                    <TableCell className="font-semibold text-center text-green-600">{machine.machine_number}</TableCell>
+                    <TableCell className="text-center">{machine.equipment_number || '-'}</TableCell>
                     <TableCell>{machine.manufacturer || '-'}</TableCell>
                     <TableCell>{machine.model_type || '-'}</TableCell>
                     <TableCell>

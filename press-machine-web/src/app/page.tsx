@@ -112,21 +112,6 @@ export default function HomeWithAuth() {
             </CardContent>
           </Card>
         </div>
-        
-        <div className="mt-8">
-          <Card className="border-green-200 bg-green-50">
-            <CardHeader>
-              <CardTitle className="text-green-800">✅ 認証・プロフィール取得成功</CardTitle>
-              <CardDescription className="text-green-700">
-                ユーザー: {user.email}<br/>
-                プロフィールID: {profile?.user_id || '未設定'}<br/>
-                プロフィール組織ID: {profile?.org_id || '未設定'}<br/>
-                有効組織ID: {orgId || '取得失敗'}<br/>
-                安定版認証プロバイダーが正常に動作しています！
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
       </main>
     </div>
   )

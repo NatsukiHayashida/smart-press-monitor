@@ -28,7 +28,7 @@ export default function MachinesPage() {
         .from('press_machines')
         .select('*')
         .eq('org_id', orgId)
-        .order('machine_number', { ascending: true })
+        .order('id', { ascending: true })
 
       if (!mounted) return
       if (error) { 
@@ -57,7 +57,7 @@ export default function MachinesPage() {
       }, (payload) => {
         console.log('Realtime update received:', payload)
         // リロード
-        supabase.from('press_machines').select('*').eq('org_id', orgId).then(({ data }) => {
+        supabase.from('press_machines').select('*').eq('org_id', orgId).order('id', { ascending: true }).then(({ data }) => {
           setMachines(data ?? [])
         })
       })
