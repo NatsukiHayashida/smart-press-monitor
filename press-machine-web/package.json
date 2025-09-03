@@ -1,7 +1,5 @@
 {
-  "name": "smart-press-monitor",
-  "version": "0.1.0",
-  "description": "Smart Press Machine Monitoring System - プレス機スマート監視システム",
+  "name": "press-machine-web",
   "private": true,
   "scripts": {
     "dev": "next dev",
