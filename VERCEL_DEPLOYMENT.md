@@ -58,3 +58,25 @@ NEXT_PUBLIC_DEFAULT_ORG_ID=c897453e-14c7-4335-bdb4-91978778d95b
 ### ビルドエラー
 - ローカルで `cd press-machine-web && npm run build` が成功するか確認
 - Node.jsバージョンの互換性を確認
+
+## package.jsonの参考内容
+
+`press-machine-web/package.json` には以下の内容が含まれている必要があります：
+
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "15.5.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
+}
+```
+
+これらの依存関係により、VercelがNext.jsプロジェクトとして正しく認識されます。
