@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getProductionGroupOptions } from '@/lib/productionGroups'
 
 const machineSchema = z.object({
   machine_number: z.string().min(1, '機械番号は必須です'),
@@ -19,7 +20,10 @@ const machineSchema = z.object({
   model_type: z.string().optional(),
   serial_number: z.string().optional(),
   machine_type: z.enum(['圧造', 'その他']),
-  production_group: z.number().min(1, 'グループ番号は1以上である必要があります'),
+  production_group: z.number().refine(
+    (val) => [1, 2, 3, 30, 32].includes(val),
+    { message: '有効な生産グループを選択してください' }
+  ),
   tonnage: z.number().optional(),
 })
 
@@ -60,6 +64,7 @@ export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) 
   })
 
   const machineTypeValue = watch('machine_type')
+  const productionGroupValue = watch('production_group')
 
   const onSubmit = async (data: MachineFormData) => {
     if (!profile?.org_id) return
@@ -69,7 +74,7 @@ export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) 
     try {
       const machineData: PressMachineInsert = {
         ...data,
-        org_id: profile.org_id,
+        org_id: profile.org_id!,
         equipment_number: data.equipment_number || null,
         manufacturer: data.manufacturer || null,
         model_type: data.model_type || null,
@@ -176,12 +181,21 @@ export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) 
 
         <div>
           <Label htmlFor="production_group">生産グループ *</Label>
-          <Input
-            id="production_group"
-            type="number"
-            min="1"
-            {...register('production_group', { valueAsNumber: true })}
-          />
+          <Select 
+            value={productionGroupValue?.toString()} 
+            onValueChange={(value) => setValue('production_group', parseInt(value))}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="グループを選択" />
+            </SelectTrigger>
+            <SelectContent>
+              {getProductionGroupOptions().map(option => (
+                <SelectItem key={option.value} value={option.value.toString()}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {errors.production_group && (
             <p className="text-sm text-red-600 mt-1">{errors.production_group.message}</p>
           )}

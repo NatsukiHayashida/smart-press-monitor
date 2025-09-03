@@ -13,7 +13,7 @@ export function Header() {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-4">
             <Link href="/" className="text-xl font-bold text-gray-900">
-              🤖 Smart Press Monitor
+              Smart Press Monitor
             </Link>
             
             {user && (
@@ -34,7 +34,7 @@ export function Header() {
                   href="/analytics" 
                   className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  分析・レポート
+                  統計・レポート
                 </Link>
               </nav>
             )}

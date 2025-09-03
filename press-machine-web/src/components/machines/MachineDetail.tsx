@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { SpecificationCard } from './SpecificationCard'
+import { getProductionGroupName } from '@/lib/productionGroups'
 
 interface MachineDetailProps {
   machine: PressMachine
@@ -61,7 +62,7 @@ export function MachineDetail({ machine }: MachineDetailProps) {
               <label className="text-sm font-medium text-gray-500">生産グループ</label>
               <p>
                 <span className="inline-block px-2 py-1 rounded bg-gray-100 text-gray-800 text-sm">
-                  グループ{machine.production_group}
+                  {getProductionGroupName(machine.production_group)}
                 </span>
               </p>
             </div>

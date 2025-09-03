@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
+import { getProductionGroupName } from '@/lib/productionGroups'
 
 interface MachineTableProps {
   machines: PressMachine[]
@@ -95,7 +96,7 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
                     </TableCell>
                     <TableCell>
                       <span className="inline-block px-2 py-1 rounded bg-gray-100 text-gray-800 text-xs">
-                        グループ{machine.production_group}
+                        {getProductionGroupName(machine.production_group)}
                       </span>
                     </TableCell>
                     <TableCell>{machine.tonnage ? `${machine.tonnage}t` : '-'}</TableCell>

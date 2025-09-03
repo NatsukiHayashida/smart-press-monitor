@@ -42,7 +42,7 @@ export function MaintenanceForm({ onSuccess, onCancel }: MaintenanceFormProps) {
     const { data } = await supabase
       .from('press_machines')
       .select('*')
-      .eq('org_id', profile.org_id)
+      .eq('org_id', profile.org_id!)
       .order('machine_number', { ascending: true })
     
     setMachines(data || [])

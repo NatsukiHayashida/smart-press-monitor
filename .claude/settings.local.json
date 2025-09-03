@@ -38,7 +38,11 @@
       "Bash(git commit:*)",
       "Bash(git config:*)",
       "Bash(git push:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git remote set-url:*)",
+      "Bash(wmic process where:*)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" update_database_schema.py)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" check_detailed_data.py)",
+      "Bash(tasklist:*)"
     ],
     "deny": [],
     "ask": []
