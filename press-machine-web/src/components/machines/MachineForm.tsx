@@ -1,0 +1,215 @@
+'use client'
+
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import { useAuth } from '@/components/auth/AuthProvider'
+import { supabaseBrowser } from '@/lib/supabase/client'
+import { PressMachine, PressMachineInsert } from '@/types/database'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+const machineSchema = z.object({
+  machine_number: z.string().min(1, '機械番号は必須です'),
+  equipment_number: z.string().optional(),
+  manufacturer: z.string().optional(),
+  model_type: z.string().optional(),
+  serial_number: z.string().optional(),
+  machine_type: z.enum(['圧造', 'その他']),
+  production_group: z.number().min(1, 'グループ番号は1以上である必要があります'),
+  tonnage: z.number().optional(),
+})
+
+type MachineFormData = z.infer<typeof machineSchema>
+
+interface MachineFormProps {
+  machine?: PressMachine
+  onSuccess: () => void
+  onCancel?: () => void
+}
+
+export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) {
+  const { profile } = useAuth()
+  const [loading, setLoading] = useState(false)
+  const supabase = supabaseBrowser()
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<MachineFormData>({
+    resolver: zodResolver(machineSchema),
+    defaultValues: machine ? {
+      machine_number: machine.machine_number,
+      equipment_number: machine.equipment_number || '',
+      manufacturer: machine.manufacturer || '',
+      model_type: machine.model_type || '',
+      serial_number: machine.serial_number || '',
+      machine_type: machine.machine_type as '圧造' | 'その他',
+      production_group: machine.production_group,
+      tonnage: machine.tonnage || undefined,
+    } : {
+      machine_type: '圧造',
+      production_group: 1,
+    }
+  })
+
+  const machineTypeValue = watch('machine_type')
+
+  const onSubmit = async (data: MachineFormData) => {
+    if (!profile?.org_id) return
+
+    setLoading(true)
+
+    try {
+      const machineData: PressMachineInsert = {
+        ...data,
+        org_id: profile.org_id,
+        equipment_number: data.equipment_number || null,
+        manufacturer: data.manufacturer || null,
+        model_type: data.model_type || null,
+        serial_number: data.serial_number || null,
+        tonnage: data.tonnage || null,
+      }
+
+      if (machine) {
+        // 更新
+        const { error } = await supabase
+          .from('press_machines')
+          .update(machineData)
+          .eq('id', machine.id)
+
+        if (error) throw error
+      } else {
+        // 新規作成
+        const { error } = await supabase
+          .from('press_machines')
+          .insert(machineData)
+
+        if (error) throw error
+      }
+
+      onSuccess()
+    } catch (error) {
+      console.error('Error saving machine:', error)
+      alert('保存中にエラーが発生しました')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="machine_number">機械番号 *</Label>
+          <Input
+            id="machine_number"
+            {...register('machine_number')}
+            placeholder="例: P001"
+          />
+          {errors.machine_number && (
+            <p className="text-sm text-red-600 mt-1">{errors.machine_number.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label htmlFor="equipment_number">設備番号</Label>
+          <Input
+            id="equipment_number"
+            {...register('equipment_number')}
+            placeholder="例: EQ001"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="manufacturer">メーカー</Label>
+          <Input
+            id="manufacturer"
+            {...register('manufacturer')}
+            placeholder="例: アマダ"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="model_type">型式</Label>
+          <Input
+            id="model_type"
+            {...register('model_type')}
+            placeholder="例: TP-100"
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="serial_number">シリアル番号</Label>
+        <Input
+          id="serial_number"
+          {...register('serial_number')}
+          placeholder="例: SN123456"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <Label>種別 *</Label>
+          <Select 
+            value={machineTypeValue} 
+            onValueChange={(value) => setValue('machine_type', value as '圧造' | 'その他')}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="圧造">圧造</SelectItem>
+              <SelectItem value="その他">その他</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="production_group">生産グループ *</Label>
+          <Input
+            id="production_group"
+            type="number"
+            min="1"
+            {...register('production_group', { valueAsNumber: true })}
+          />
+          {errors.production_group && (
+            <p className="text-sm text-red-600 mt-1">{errors.production_group.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label htmlFor="tonnage">トン数</Label>
+          <Input
+            id="tonnage"
+            type="number"
+            min="0"
+            step="0.1"
+            {...register('tonnage', { valueAsNumber: true })}
+            placeholder="例: 100"
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-2 justify-end">
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            キャンセル
+          </Button>
+        )}
+        <Button type="submit" disabled={loading}>
+          {loading ? '保存中...' : machine ? '更新' : '登録'}
+        </Button>
+      </div>
+    </form>
+  )
+}

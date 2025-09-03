@@ -1,0 +1,127 @@
+'use client'
+
+import { useState } from 'react'
+import { PressMachine } from '@/types/database'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
+
+interface MachineTableProps {
+  machines: PressMachine[]
+  onRefresh?: () => void
+}
+
+export function MachineTable({ machines, onRefresh }: MachineTableProps) {
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const filteredMachines = machines.filter(machine =>
+    machine.machine_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    machine.manufacturer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    machine.model_type?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle>プレス機一覧</CardTitle>
+          <div className="flex gap-2 items-center">
+            <Input
+              placeholder="機械番号、メーカー、型式で検索..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-80"
+            />
+            {onRefresh && (
+              <Button onClick={onRefresh} variant="outline">
+                更新
+              </Button>
+            )}
+            <Link href="/machines/new">
+              <Button>新規追加</Button>
+            </Link>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>機械番号</TableHead>
+                <TableHead>設備番号</TableHead>
+                <TableHead>メーカー</TableHead>
+                <TableHead>型式</TableHead>
+                <TableHead>種別</TableHead>
+                <TableHead>グループ</TableHead>
+                <TableHead>トン数</TableHead>
+                <TableHead>登録日</TableHead>
+                <TableHead>操作</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredMachines.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                    プレス機が見つかりません
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredMachines.map((machine) => (
+                  <TableRow key={machine.id}>
+                    <TableCell className="font-mono text-sm">{machine.id}</TableCell>
+                    <TableCell className="font-semibold">{machine.machine_number}</TableCell>
+                    <TableCell>{machine.equipment_number || '-'}</TableCell>
+                    <TableCell>{machine.manufacturer || '-'}</TableCell>
+                    <TableCell>{machine.model_type || '-'}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                        machine.machine_type === '圧造' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {machine.machine_type}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="inline-block px-2 py-1 rounded bg-gray-100 text-gray-800 text-xs">
+                        グループ{machine.production_group}
+                      </span>
+                    </TableCell>
+                    <TableCell>{machine.tonnage ? `${machine.tonnage}t` : '-'}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {new Date(machine.created_at).toLocaleDateString('ja-JP')}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Link href={`/machines/${machine.id}`}>
+                          <Button variant="outline" size="sm">
+                            詳細
+                          </Button>
+                        </Link>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        
+        <div className="mt-4 text-sm text-muted-foreground">
+          {filteredMachines.length} / {machines.length} 台を表示
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

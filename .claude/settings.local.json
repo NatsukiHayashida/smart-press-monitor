@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" import_new_data_part2.py)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" press_machine_app.py)",
+      "Bash(timeout:*)",
+      "Bash(dir)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" check_database.py)",
+      "Bash(sqlite3:*)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" simple_check.py)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" export_to_csv.py)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" prepare_supabase_data.py)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npm install:*)",
+      "Bash(npx:*)",
+      "Bash(npm run build:*)",
+      "Bash(if exist \".next\" rmdir /S /Q \".next\")",
+      "Bash(npm run dev:*)",
+      "Bash(dir:*)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" fix_csv_orgid.py)",
+      "Bash(node:*)",
+      "Bash(move page.tsx page-original.tsx)",
+      "Bash(move page-simple.tsx page.tsx)",
+      "Bash(taskkill:*)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" fix_database.py)",
+      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" -m pip install psycopg2-binary)",
+      "Bash(del debugpage.tsx)",
+      "Bash(move check_database.py archive )",
+      "Bash(move simple_check.py archive )",
+      "Bash(move test_data_after_fix.js archive )",
+      "Bash(move fix_database.js archive )",
+      "Bash(move fix_database.py archive )",
+      "Bash(move fix_via_api.py archive )",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
