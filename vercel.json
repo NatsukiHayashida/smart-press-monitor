@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
   "framework": "nextjs",
+  "installCommand": "cd press-machine-web && npm install",
+  "buildCommand": "cd press-machine-web && npm run build",
+  "outputDirectory": "press-machine-web/.next",
   "functions": {
-    "app/**/*.{js,ts,tsx}": {
+    "press-machine-web/.next/server/**/*.js": {
       "maxDuration": 10
     }
   },

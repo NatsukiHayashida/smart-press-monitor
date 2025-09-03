@@ -44,7 +44,8 @@
       "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" check_detailed_data.py)",
       "Bash(tasklist:*)",
       "Bash(move page.tsx page-debug.tsx)",
-      "Bash(move page-original.tsx page.tsx)"
+      "Bash(move page-original.tsx page.tsx)",
+      "Bash(move press-machine-webvercel.json vercel.json)"
     ],
     "deny": [],
     "ask": []
