@@ -75,7 +75,7 @@ export default function MaintenancePage() {
             manufacturer,
             model_type
           )
-        `).eq('org_id', orgId).then(({ data }) => {
+        `).eq('org_id', orgId).order('maintenance_date', { ascending: false }).then(({ data }) => {
           setRecords(data ?? [])
         })
       })
@@ -98,7 +98,7 @@ export default function MaintenancePage() {
           manufacturer,
           model_type
         )
-      `).eq('org_id', orgId).then(({ data }) => {
+      `).eq('org_id', orgId).order('maintenance_date', { ascending: false }).then(({ data }) => {
         setRecords(data ?? [])
       })
     }
