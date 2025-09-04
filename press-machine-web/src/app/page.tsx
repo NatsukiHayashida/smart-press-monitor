@@ -93,12 +93,12 @@ export default function DashboardPage() {
         .from('maintenance_records')
         .select(`
           id,
-          maintenance_date,
+          maintenance_datetime,
           overall_judgment,
           press_machines!inner(machine_number)
         `)
         .eq('org_id', orgId)
-        .order('maintenance_date', { ascending: false })
+        .order('maintenance_datetime', { ascending: false })
         .limit(5)
 
       if (recentMaintenanceError) throw recentMaintenanceError
