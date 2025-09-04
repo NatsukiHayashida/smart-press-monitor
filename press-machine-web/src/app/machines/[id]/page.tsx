@@ -74,7 +74,7 @@ export default function MachineDetailPage() {
       `)
       .eq('press_id', Number(machineId))
       .eq('org_id', orgId!)
-      .order('maintenance_datetime', { ascending: false })
+      .order('maintenance_date', { ascending: false })
       .limit(10)
 
     if (error) {
@@ -244,7 +244,7 @@ export default function MachineDetailPage() {
                       <div key={record.id} className="border rounded p-3">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">
-                            {new Date(record.maintenance_datetime).toLocaleDateString('ja-JP')}
+                            {new Date(record.maintenance_date).toLocaleDateString('ja-JP')}
                           </span>
                           <Badge 
                             variant={record.overall_judgment === 'A:良好' ? 'default' : 

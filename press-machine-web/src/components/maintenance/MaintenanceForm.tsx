@@ -25,7 +25,7 @@ export function MaintenanceForm({ onSuccess, onCancel }: MaintenanceFormProps) {
   const [formData, setFormData] = useState<MaintenanceRecordInsert>({
     org_id: profile?.org_id || '',
     press_id: 0,
-    maintenance_datetime: new Date().toISOString().slice(0, 16),
+    maintenance_date: new Date().toISOString().slice(0, 10),
     overall_judgment: 'A:良好',
     clutch_valve_replacement: '未実施',
     brake_valve_replacement: '未実施',
@@ -97,11 +97,11 @@ export function MaintenanceForm({ onSuccess, onCancel }: MaintenanceFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="maintenance_datetime">メンテナンス日時</Label>
+            <Label htmlFor="maintenance_date">メンテナンス日</Label>
             <Input
-              type="datetime-local"
-              value={formData.maintenance_datetime}
-              onChange={(e) => setFormData({ ...formData, maintenance_datetime: e.target.value })}
+              type="date"
+              value={formData.maintenance_date}
+              onChange={(e) => setFormData({ ...formData, maintenance_date: e.target.value })}
               required
             />
           </div>

@@ -86,7 +86,7 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
                 <TableHead>ID</TableHead>
                 <TableHead>機械番号</TableHead>
                 <TableHead>メーカー・型式</TableHead>
-                <TableHead>メンテナンス日時</TableHead>
+                <TableHead>メンテナンス日</TableHead>
                 <TableHead>総合判定</TableHead>
                 <TableHead>クラッチ弁</TableHead>
                 <TableHead>ブレーキ弁</TableHead>
@@ -114,7 +114,7 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
                       </div>
                     </TableCell>
                     <TableCell className="text-sm">
-                      {new Date(record.maintenance_datetime).toLocaleString('ja-JP')}
+                      {new Date(record.maintenance_date).toLocaleDateString('ja-JP')}
                     </TableCell>
                     <TableCell>
                       <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getJudgmentColor(record.overall_judgment)}`}>

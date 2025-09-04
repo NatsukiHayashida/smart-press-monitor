@@ -87,10 +87,10 @@ export default function AnalyticsPage() {
       for (const machine of (machineTypeData as any[]) || []) {
         const { data: maintenanceData, error: maintenanceError } = await supabase
           .from('maintenance_records')
-          .select('maintenance_datetime')
+          .select('maintenance_date')
           .eq('org_id', orgId)
           .eq('machine_number', machine.machine_number)
-          .order('maintenance_datetime', { ascending: false })
+          .order('maintenance_date', { ascending: false })
           .limit(1)
 
         if (maintenanceError) {
@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
 
         latestMaintenanceByMachine.push({
           machine_number: machine.machine_number,
-          latest_maintenance: (maintenanceData as any)?.[0]?.maintenance_datetime || null
+          latest_maintenance: (maintenanceData as any)?.[0]?.maintenance_date || null
         })
       }
 

@@ -30,7 +30,7 @@ interface DashboardData {
   recentMaintenance: {
     id: number
     machine_number: string
-    maintenance_datetime: string
+    maintenance_date: string
     overall_judgment: string
   }[]
 }
@@ -93,12 +93,12 @@ export default function DashboardPage() {
         .from('maintenance_records')
         .select(`
           id,
-          maintenance_datetime,
+          maintenance_date,
           overall_judgment,
           press_machines!inner(machine_number)
         `)
         .eq('org_id', orgId)
-        .order('maintenance_datetime', { ascending: false })
+        .order('maintenance_date', { ascending: false })
         .limit(5)
 
       if (recentMaintenanceError) throw recentMaintenanceError
@@ -106,7 +106,7 @@ export default function DashboardPage() {
       const recentMaintenance = (recentMaintenanceData as any[])?.map((record: any) => ({
         id: record.id,
         machine_number: record.press_machines?.machine_number || '',
-        maintenance_datetime: record.maintenance_datetime,
+        maintenance_date: record.maintenance_date,
         overall_judgment: record.overall_judgment
       })) || []
 
@@ -315,7 +315,7 @@ export default function DashboardPage() {
                             #{record.machine_number}
                           </span>
                           <span className="text-sm text-gray-600">
-                            {new Date(record.maintenance_datetime).toLocaleDateString('ja-JP')}
+                            {new Date(record.maintenance_date).toLocaleDateString('ja-JP')}
                           </span>
                         </div>
                         <Badge 
