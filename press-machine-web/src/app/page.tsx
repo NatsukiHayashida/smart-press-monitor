@@ -319,7 +319,8 @@ export default function DashboardPage() {
                           </span>
                         </div>
                         <Badge 
-                          variant={record.overall_judgment === '良好' ? 'default' : 'destructive'}
+                          variant={record.overall_judgment === 'A:良好' ? 'default' : 
+                                 record.overall_judgment === 'B:一部修理' ? 'outline' : 'destructive'}
                         >
                           {record.overall_judgment}
                         </Badge>

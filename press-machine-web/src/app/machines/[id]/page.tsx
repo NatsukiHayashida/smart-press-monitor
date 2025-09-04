@@ -247,7 +247,8 @@ export default function MachineDetailPage() {
                             {new Date(record.maintenance_datetime).toLocaleDateString('ja-JP')}
                           </span>
                           <Badge 
-                            variant={record.overall_judgment === '良好' ? 'default' : 'destructive'}
+                            variant={record.overall_judgment === 'A:良好' ? 'default' : 
+                                   record.overall_judgment === 'B:一部修理' ? 'outline' : 'destructive'}
                           >
                             {record.overall_judgment}
                           </Badge>

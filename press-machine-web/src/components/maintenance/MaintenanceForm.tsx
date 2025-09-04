@@ -26,7 +26,7 @@ export function MaintenanceForm({ onSuccess, onCancel }: MaintenanceFormProps) {
     org_id: profile?.org_id || '',
     press_id: 0,
     maintenance_datetime: new Date().toISOString().slice(0, 16),
-    overall_judgment: '良好',
+    overall_judgment: 'A:良好',
     clutch_valve_replacement: '未実施',
     brake_valve_replacement: '未実施',
     remarks: ''
@@ -116,10 +116,9 @@ export function MaintenanceForm({ onSuccess, onCancel }: MaintenanceFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="良好">良好</SelectItem>
-                <SelectItem value="要注意">要注意</SelectItem>
-                <SelectItem value="要修理">要修理</SelectItem>
-                <SelectItem value="異常">異常</SelectItem>
+                <SelectItem value="A:良好">A:良好</SelectItem>
+                <SelectItem value="B:一部修理">B:一部修理</SelectItem>
+                <SelectItem value="C:至急修理を要す">C:至急修理を要す</SelectItem>
               </SelectContent>
             </Select>
           </div>

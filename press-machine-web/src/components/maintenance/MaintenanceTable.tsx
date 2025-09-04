@@ -31,14 +31,12 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
 
   const getJudgmentColor = (judgment: string) => {
     switch (judgment) {
-      case '良好':
+      case 'A:良好':
         return 'bg-green-100 text-green-800'
-      case '要注意':
+      case 'B:一部修理':
         return 'bg-yellow-100 text-yellow-800'
-      case '要修理':
+      case 'C:至急修理を要す':
         return 'bg-red-100 text-red-800'
-      case '異常':
-        return 'bg-red-200 text-red-900'
       default:
         return 'bg-gray-100 text-gray-800'
     }
