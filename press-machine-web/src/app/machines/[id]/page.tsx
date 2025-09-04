@@ -198,10 +198,12 @@ export default function MachineDetailPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <Edit className="w-4 h-4 mr-2" />
-                編集
-              </Button>
+              <Link href={`/machines/${machineId}/edit`}>
+                <Button variant="outline" size="sm">
+                  <Edit className="w-4 h-4 mr-2" />
+                  編集
+                </Button>
+              </Link>
               <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" onClick={handleDelete}>
                 <Trash2 className="w-4 h-4 mr-2" />
                 削除
