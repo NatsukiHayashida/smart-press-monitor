@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { supabaseBrowser } from '@/lib/supabase/client'
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useAuth } from '@/components/auth/AuthProvider-minimal'
 import { PressMachine, MaintenanceRecordInsert } from '@/types/database'
 
 interface MaintenanceFormProps {

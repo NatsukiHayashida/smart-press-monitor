@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabaseBrowser } from '@/lib/supabase/client'
-import { useAuth } from '@/components/auth/AuthProvider'
+import { useAuth } from '@/components/auth/AuthProvider-minimal'
 import { getEffectiveOrgId } from '@/lib/org'
 import { PressMachine } from '@/types/database'
 import { MachineForm } from '@/components/machines/MachineForm'
