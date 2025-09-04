@@ -45,7 +45,8 @@
       "Bash(tasklist:*)",
       "Bash(move page.tsx page-debug.tsx)",
       "Bash(move page-original.tsx page.tsx)",
-      "Bash(move press-machine-webvercel.json vercel.json)"
+      "Bash(move press-machine-webvercel.json vercel.json)",
+      "Bash(move middleware.ts middleware.disabled.ts)"
     ],
     "deny": [],
     "ask": []
