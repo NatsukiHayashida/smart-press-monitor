@@ -12,7 +12,7 @@ import { LoginForm } from '@/components/auth/LoginForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function MachineDetailPage() {
@@ -141,17 +141,11 @@ export default function MachineDetailPage() {
             </Link>
           </div>
           <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <h2 className="text-lg font-semibold text-red-800 mb-2">データ読み込みエラー</h2>
-            <p className="text-red-700">{error}</p>
-            <div className="mt-4">
-              <p className="text-sm text-red-600">デバッグ情報:</p>
-              <ul className="text-xs text-red-600 mt-1 space-y-1">
-                <li>• ユーザー: {user?.email}</li>
-                <li>• プロフィール組織ID: {profile?.org_id || '未設定'}</li>
-                <li>• 有効組織ID: {orgId || '取得失敗'}</li>
-                <li>• 機械ID: {machineId}</li>
-              </ul>
+            <div className="flex items-center">
+              <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
+              <h2 className="text-lg font-semibold text-red-800">データ読み込みエラー</h2>
             </div>
+            <p className="text-red-700 mt-2">プレス機情報の読み込み中にエラーが発生しました。ページを更新してもう一度お試しください。</p>
           </div>
         </div>
       </div>
