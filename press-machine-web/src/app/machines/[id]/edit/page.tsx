@@ -6,7 +6,7 @@ import { supabaseBrowser } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider-minimal'
 import { getEffectiveOrgId } from '@/lib/org'
 import { PressMachine } from '@/types/database'
-import { MachineForm } from '@/components/machines/MachineForm'
+import { MachineFormExpanded } from '@/components/machines/MachineFormExpanded'
 import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { Button } from '@/components/ui/button'
@@ -128,7 +128,7 @@ export default function MachineEditPage() {
         </div>
 
         {/* 編集フォーム */}
-        <MachineForm 
+        <MachineFormExpanded 
           machine={machine}
           onSuccess={handleSuccess}
           onCancel={handleCancel}
