@@ -38,7 +38,7 @@ export default function MaintenancePage() {
           )
         `)
         .eq('org_id', orgId)
-        .order('maintenance_datetime', { ascending: false })
+        .order('maintenance_date', { ascending: false })
 
       if (!mounted) return
       if (error) { 

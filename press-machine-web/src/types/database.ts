@@ -234,7 +234,7 @@ export interface Database {
           id?: number
           org_id?: string
           press_id?: number
-          maintenance_datetime?: string
+          maintenance_date?: string
           overall_judgment?: string
           clutch_valve_replacement?: string
           brake_valve_replacement?: string
