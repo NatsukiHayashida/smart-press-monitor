@@ -117,14 +117,7 @@ export default function MachineDetailPage() {
   const loadMaintenanceRecords = async () => {
     const { data, error } = await supabase
       .from('maintenance_records')
-      .select(`
-        *,
-        press_machines (
-          machine_number,
-          manufacturer,
-          model_type
-        )
-      `)
+      .select('*')
       .eq('press_id', Number(machineId))
       .eq('org_id', orgId!)
       .order('maintenance_date', { ascending: false })
@@ -141,14 +134,7 @@ export default function MachineDetailPage() {
     try {
       const { data, error } = await supabase
         .from('maintenance_schedules')
-        .select(`
-          *,
-          press_machines (
-            machine_number,
-            manufacturer,
-            model_type
-          )
-        `)
+        .select('*')
         .eq('press_id', Number(machineId))
         .eq('org_id', orgId!)
         .in('status', ['scheduled', 'in_progress'])

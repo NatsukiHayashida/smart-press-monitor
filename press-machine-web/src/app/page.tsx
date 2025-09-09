@@ -91,24 +91,31 @@ export default function DashboardPage() {
       // 最近のメンテナンス記録（5件）
       const { data: recentMaintenanceData, error: recentMaintenanceError } = await supabase
         .from('maintenance_records')
-        .select(`
-          id,
-          maintenance_date,
-          overall_judgment,
-          press_machines!inner(machine_number)
-        `)
+        .select('id, maintenance_date, overall_judgment, press_id')
         .eq('org_id', orgId)
         .order('maintenance_date', { ascending: false })
         .limit(5)
 
       if (recentMaintenanceError) throw recentMaintenanceError
 
-      const recentMaintenance = (recentMaintenanceData as any[])?.map((record: any) => ({
-        id: record.id,
-        machine_number: record.press_machines?.machine_number || '',
-        maintenance_date: record.maintenance_date,
-        overall_judgment: record.overall_judgment
-      })) || []
+      // プレス機の番号を取得
+      const recentMaintenance = []
+      for (const record of (recentMaintenanceData as any[]) || []) {
+        const { data: machineData, error: machineError } = await supabase
+          .from('press_machines')
+          .select('machine_number')
+          .eq('id', record.press_id)
+          .single()
+        
+        if (!machineError && machineData) {
+          recentMaintenance.push({
+            id: record.id,
+            machine_number: machineData.machine_number,
+            maintenance_date: record.maintenance_date,
+            overall_judgment: record.overall_judgment
+          })
+        }
+      }
 
       setDashboardData({
         totalMachines: totalMachines || 0,
