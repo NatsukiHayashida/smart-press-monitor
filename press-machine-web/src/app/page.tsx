@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/components/auth/AuthProvider-minimal'
+import { useAuth } from '@/components/auth/AuthProvider'
 import { supabaseBrowser } from '@/lib/supabase/client'
 import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
@@ -133,7 +133,41 @@ export default function DashboardPage() {
     loadDashboardData()
   }, [loading, user, orgId])
 
-  if (loading || isLoading) {
+  // 認証チェック - loadingがfalseでuserがない場合はログインページへリダイレクト
+  useEffect(() => {
+    if (!loading && !user) {
+      window.location.href = '/auth/login'
+    }
+  }, [loading, user])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto py-6 px-4">
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-2 text-gray-600">認証状態を確認しています...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto py-6 px-4">
+          <div className="text-center py-8">
+            <p className="text-gray-600">ログインページへリダイレクトしています...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
@@ -143,14 +177,6 @@ export default function DashboardPage() {
             <p className="mt-2 text-gray-600">ダッシュボードを読み込んでいます...</p>
           </div>
         </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <LoginForm />
       </div>
     )
   }

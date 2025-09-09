@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { supabaseBrowser } from '@/lib/supabase/client'
-import { useAuth } from '@/components/auth/AuthProvider-minimal'
+import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { MaintenanceTable } from '@/components/maintenance/MaintenanceTable'
 import { MaintenanceForm } from '@/components/maintenance/MaintenanceForm'
@@ -98,8 +98,14 @@ export default function MaintenancePage() {
           manufacturer,
           model_type
         )
-      `).eq('org_id', orgId).order('maintenance_date', { ascending: false }).then(({ data }) => {
-        setRecords(data ?? [])
+      `).eq('org_id', orgId).order('maintenance_date', { ascending: false }).then(({ data, error }) => {
+        console.log('Maintenance records query result:', { data, error })
+        if (error) {
+          console.error('Maintenance records query error:', error)
+          setError(error.message)
+        } else {
+          setRecords(data ?? [])
+        }
       })
     }
   }

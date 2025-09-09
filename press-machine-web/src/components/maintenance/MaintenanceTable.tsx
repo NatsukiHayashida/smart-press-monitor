@@ -13,6 +13,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Edit, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 interface MaintenanceTableProps {
   records: MaintenanceRecordWithMachine[]
@@ -22,12 +24,27 @@ interface MaintenanceTableProps {
 
 export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
+  const router = useRouter()
+
+  // デバッグ用ログ
+  console.log('MaintenanceTable records:', records.length > 0 ? records[0] : 'No records')
 
   const filteredRecords = records.filter(record =>
     record.press_machines.machine_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.press_machines.manufacturer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     record.overall_judgment.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const handleEdit = (recordId: number) => {
+    console.log('Editing record with ID:', recordId, typeof recordId)
+    if (!recordId || isNaN(recordId)) {
+      console.error('Invalid record ID:', recordId)
+      return
+    }
+    const editUrl = `/maintenance/${recordId}/edit`
+    console.log('Navigating to:', editUrl)
+    router.push(editUrl)
+  }
 
   const getJudgmentColor = (judgment: string) => {
     switch (judgment) {
@@ -91,12 +108,13 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
                 <TableHead>クラッチ弁</TableHead>
                 <TableHead>ブレーキ弁</TableHead>
                 <TableHead>備考</TableHead>
+                <TableHead>操作</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredRecords.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                     メンテナンス記録が見つかりません
                   </TableCell>
                 </TableRow>
@@ -134,6 +152,18 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
                     <TableCell className="max-w-xs">
                       <div className="text-sm text-gray-600 truncate" title={record.remarks || ''}>
                         {record.remarks || '-'}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(record.id)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>

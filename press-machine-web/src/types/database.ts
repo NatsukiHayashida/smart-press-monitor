@@ -242,6 +242,59 @@ export interface Database {
           created_at?: string
         }
       }
+      maintenance_schedules: {
+        Row: {
+          id: number
+          org_id: string
+          press_id: number
+          scheduled_date: string
+          maintenance_type: string
+          priority: string
+          planned_work: string | null
+          estimated_duration: number | null
+          assigned_technician: string | null
+          status: string
+          completed_at: string | null
+          completed_maintenance_record_id: number | null
+          created_at: string
+          updated_at: string
+          created_by: string | null
+        }
+        Insert: {
+          id?: number
+          org_id: string
+          press_id: number
+          scheduled_date: string
+          maintenance_type?: string
+          priority?: string
+          planned_work?: string | null
+          estimated_duration?: number | null
+          assigned_technician?: string | null
+          status?: string
+          completed_at?: string | null
+          completed_maintenance_record_id?: number | null
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+        }
+        Update: {
+          id?: number
+          org_id?: string
+          press_id?: number
+          scheduled_date?: string
+          maintenance_type?: string
+          priority?: string
+          planned_work?: string | null
+          estimated_duration?: number | null
+          assigned_technician?: string | null
+          status?: string
+          completed_at?: string | null
+          completed_maintenance_record_id?: number | null
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+        }
+      }
     }
     Views: {
       user_org_access: {
@@ -259,13 +312,20 @@ export interface Database {
 
 export type PressMachine = Database['public']['Tables']['press_machines']['Row']
 export type MaintenanceRecord = Database['public']['Tables']['maintenance_records']['Row']
+export type MaintenanceSchedule = Database['public']['Tables']['maintenance_schedules']['Row']
 export type Profile = Database['public']['Tables']['profiles']['Row']
 
 // フォーム用の型
 export type PressMachineInsert = Database['public']['Tables']['press_machines']['Insert']
 export type MaintenanceRecordInsert = Database['public']['Tables']['maintenance_records']['Insert']
+export type MaintenanceScheduleInsert = Database['public']['Tables']['maintenance_schedules']['Insert']
 
 // メンテナンス記録とプレス機の結合型
 export type MaintenanceRecordWithMachine = MaintenanceRecord & {
+  press_machines: Pick<PressMachine, 'machine_number' | 'manufacturer' | 'model_type'>
+}
+
+// メンテナンス予定とプレス機の結合型
+export type MaintenanceScheduleWithMachine = MaintenanceSchedule & {
   press_machines: Pick<PressMachine, 'machine_number' | 'manufacturer' | 'model_type'>
 }

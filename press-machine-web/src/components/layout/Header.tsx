@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useAuth } from '@/components/auth/AuthProvider-minimal'
+import { useAuth } from '@/components/auth/AuthProvider'
 import { Button } from '@/components/ui/button'
+import { LogOut, User } from 'lucide-react'
 
 export function Header() {
-  const { user, profile } = useAuth()
+  const { user, profile, signOut } = useAuth()
 
   return (
     <header className="bg-white shadow-sm border-b">
@@ -43,12 +44,21 @@ export function Header() {
           <div className="flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-600">
-                  ようこそ、{profile?.full_name || user.email}さん
-                </span>
-                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                  ログイン中
-                </span>
+                <div className="flex items-center space-x-2">
+                  <User className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-gray-600">
+                    {user.email}
+                  </span>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={signOut}
+                  className="flex items-center space-x-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>ログアウト</span>
+                </Button>
               </div>
             ) : (
               <Link href="/auth/login">
