@@ -83,24 +83,32 @@ export default function AnalyticsPage() {
       if (maintenanceCountError) throw maintenanceCountError
 
       // 各機械の最新メンテナンス日を集計
+      // まず、機械IDと番号の対応を取得
+      const { data: machineData, error: machineDataError } = await supabase
+        .from('press_machines')
+        .select('id, machine_number')
+        .eq('org_id', orgId)
+      if (machineDataError) throw machineDataError
+
       const latestMaintenanceByMachine = []
-      for (const machine of (machineTypeData as any[]) || []) {
+      for (const machine of (machineData as any[]) || []) {
         const { data: maintenanceData, error: maintenanceError } = await supabase
           .from('maintenance_records')
           .select('maintenance_date')
           .eq('org_id', orgId)
-          .eq('machine_number', machine.machine_number)
+          .eq('press_id', machine.id)  // machine_numberではなくpress_idを使用
           .order('maintenance_date', { ascending: false })
           .limit(1)
 
         if (maintenanceError) {
-          console.warn(`Error fetching maintenance for ${machine.machine_number}:`, maintenanceError)
+          console.warn(`Error fetching maintenance for machine ${machine.machine_number} (ID: ${machine.id}):`, maintenanceError)
         }
 
         latestMaintenanceByMachine.push({
           machine_number: machine.machine_number,
           latest_maintenance: (maintenanceData as any)?.[0]?.maintenance_date || null
         })
+        console.log(`Machine ${machine.machine_number} (ID: ${machine.id}): Latest maintenance = ${(maintenanceData as any)?.[0]?.maintenance_date || 'None'}`)
       }
 
       // 電磁弁交換統計
@@ -319,8 +327,8 @@ export default function AnalyticsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {analyticsData.latestMaintenanceByMachine.map((item) => (
-                        <tr key={item.machine_number} className="border-b border-gray-100">
+                      {analyticsData.latestMaintenanceByMachine.map((item, index) => (
+                        <tr key={`${item.machine_number}-${index}`} className="border-b border-gray-100">
                           <td className="py-2 px-4 font-mono text-sm">{item.machine_number}</td>
                           <td className="py-2 px-4 text-sm">
                             {item.latest_maintenance 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabaseBrowser } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
@@ -19,7 +19,7 @@ interface Machine {
   manufacturer: string
 }
 
-export default function NewMaintenancePage() {
+function NewMaintenanceContent() {
   const { user, profile, loading: authLoading } = useAuth()
   const [machine, setMachine] = useState<Machine | null>(null)
   const [loading, setLoading] = useState(true)
@@ -193,5 +193,23 @@ export default function NewMaintenancePage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function NewMaintenancePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto py-6 px-4">
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-2 text-gray-600">読み込み中...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <NewMaintenanceContent />
+    </Suspense>
   )
 }
