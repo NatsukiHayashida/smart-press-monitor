@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { MachineTable } from '@/components/machines/MachineTable'
@@ -10,7 +10,7 @@ import { LoginForm } from '@/components/auth/LoginForm'
 import { AlertCircle } from 'lucide-react'
 
 export default function MachinesPage() {
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const { user, profile, loading } = useAuth()
   const [machines, setMachines] = useState<any[] | null>(null)
   const [error, setError] = useState<string | null>(null)

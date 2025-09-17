@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
@@ -26,7 +26,7 @@ function NewMaintenanceContent() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const orgId = getEffectiveOrgId(profile)
   
   const machineId = searchParams.get('machineId')

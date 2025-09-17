@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { MaintenanceTable } from '@/components/maintenance/MaintenanceTable'
@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { AlertCircle } from 'lucide-react'
 
 export default function MaintenancePage() {
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const { user, profile, loading } = useAuth()
   const [records, setRecords] = useState<any[] | null>(null)
   const [error, setError] = useState<string | null>(null)

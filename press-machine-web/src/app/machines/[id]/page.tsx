@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { PressMachine, MaintenanceRecordWithMachine, MaintenanceScheduleWithMachine } from '@/types/database'
@@ -18,7 +18,7 @@ import Link from 'next/link'
 export default function MachineDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const { user, profile, loading } = useAuth()
   const [machine, setMachine] = useState<PressMachine | null>(null)
   const [maintenanceRecords, setMaintenanceRecords] = useState<MaintenanceRecordWithMachine[]>([])
@@ -38,7 +38,7 @@ export default function MachineDetailPage() {
 
     loadMachine()
     loadMaintenanceRecords()
-    loadMaintenanceSchedules()
+    // loadMaintenanceSchedules() // maintenance_schedulesテーブルが作成されるまでコメントアウト
   }, [loading, user, orgId, machineId])
 
   // Realtime subscription for maintenance records
@@ -79,7 +79,7 @@ export default function MachineDetailPage() {
           filter: `press_id=eq.${machineId}` 
         }, (payload) => {
           console.log('Schedule realtime update received for machine:', payload)
-          loadMaintenanceSchedules()
+          // loadMaintenanceSchedules() // maintenance_schedulesテーブルが作成されるまでコメントアウト
         })
         .subscribe()
       
@@ -144,7 +144,7 @@ export default function MachineDetailPage() {
       if (error) {
         console.error('Error loading maintenance schedules:', error)
         // テーブルが存在しない場合は空配列を設定
-        if (error.code === 'PGRST116' || error.message?.includes('does not exist')) {
+        if (error.code === 'PGRST116' || error.code === 'PGRST205' || error.message?.includes('does not exist') || error.message?.includes('Could not find the table')) {
           console.log('maintenance_schedules table does not exist yet')
           setMaintenanceSchedules([])
           return

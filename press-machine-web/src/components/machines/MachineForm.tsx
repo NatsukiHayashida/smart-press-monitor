@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { PressMachine, PressMachineInsert } from '@/types/database'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -38,7 +38,7 @@ interface MachineFormProps {
 export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) {
   const { profile } = useAuth()
   const [loading, setLoading] = useState(false)
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
 
   const {
     register,

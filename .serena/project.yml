@@ -1,0 +1,65 @@
+# Serena Project Configuration
+# プレス機管理システムプロジェクト
+
+name: press_machine_db
+description: Press Machine Management System - Next.js web application with Supabase backend
+
+# プロジェクトのルートディレクトリ
+root: .
+
+# 言語設定
+languages:
+  - typescript
+  - javascript
+  - python
+  - sql
+
+# 除外パターン
+exclude:
+  - node_modules
+  - .git
+  - .next
+  - dist
+  - build
+  - archive
+  - "*.log"
+  - "*.tmp"
+  - ".cache"
+
+# 含めるディレクトリ
+include:
+  - press-machine-web/src
+  - database
+  - python
+  - scripts
+  - docs
+
+# プロジェクト固有の設定
+settings:
+  # TypeScript/JavaScript設定
+  typescript:
+    tsconfig: press-machine-web/tsconfig.json
+    
+  # Python設定
+  python:
+    version: "3.x"
+    
+  # データベース設定
+  database:
+    type: postgresql
+    schema_files:
+      - database/supabase_schema.sql
+      - database/maintenance_schedules_schema.sql
+
+# カスタムコマンド
+commands:
+  dev: "cd press-machine-web && npm run dev"
+  build: "cd press-machine-web && npm run build"
+  lint: "cd press-machine-web && npm run lint"
+
+# メタデータ
+metadata:
+  framework: "Next.js 15"
+  backend: "Supabase"
+  ui: "shadcn/ui + Tailwind CSS"
+  language: "ja-JP"

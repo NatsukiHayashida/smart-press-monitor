@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const orgId = getEffectiveOrgId(profile)
 
   const loadAnalyticsData = async () => {

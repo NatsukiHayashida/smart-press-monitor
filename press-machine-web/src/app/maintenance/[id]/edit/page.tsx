@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
@@ -41,7 +41,7 @@ export default function EditMaintenancePage({ params }: { params: Promise<{ id: 
   const [error, setError] = useState<string | null>(null)
   const [recordId, setRecordId] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const orgId = getEffectiveOrgId(profile)
 
   // paramsを非同期で取得

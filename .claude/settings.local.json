@@ -1,7 +1,32 @@
 {
   "permissions": {
     "allow": [
-      "Bash(\"C:\\Users\\CATIA\\AppData\\Local\\Programs\\Python\\Python313\\python.exe\" -c \"\nimport sqlite3\nconn = sqlite3.connect(''press_machine.db'')\ncursor = conn.cursor()\nprint(''=== All tables in press_machine.db ==='')\ncursor.execute(\"\"SELECT name FROM sqlite_master WHERE type=''table''\"\")\ntables = cursor.fetchall()\nfor table in tables:\n    print(f''Table: {table[0]}'')\nconn.close()\n\")"
+      "Bash(npm run build:*)",
+      "Bash(npm run:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(uv:*)",
+      "Bash(claude mcp:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(curl:*)",
+      "Bash(test -f \"C:\\Users\\CATIA\\Documents\\Claude\\press_machine_db\\press-machine-web\\src\\app\\maintenance\\[id]\\page.tsx\")",
+      "Bash(npx playwright test:*)",
+      "Bash(timeout 120 npx playwright install chromium)",
+      "Bash(env)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_click",
+      "Bash(git add:*)",
+      "Bash(rm:*)",
+      "Bash(while read file)",
+      "Bash(do sed -i \"s|from ''''@/lib/supabase-clerk''''|from ''''@/lib/supabase/client''''|g\" \"$file\")",
+      "Bash(sed:*)",
+      "Bash(done)",
+      "Bash(powershell:*)",
+      "Bash(npm uninstall:*)",
+      "Read(//c/Users/CATIA/Documents/Claude/press_machine_db/docs/**)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

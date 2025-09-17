@@ -1,37 +1,18 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-// 認証不要なパス
-const publicPaths = [
-  '/auth/login',
-  '/auth/callback',
-  '/api/auth',
-  '/_next',
-  '/favicon.ico'
-]
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/auth/sign-in(.*)',
+  '/auth/sign-up(.*)',
+])
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-
-  // 公開パスはスキップ
-  if (publicPaths.some(path => pathname.startsWith(path))) {
-    return NextResponse.next()
+export default clerkMiddleware((auth, request) => {
+  // パブリックルートでない場合は認証を要求
+  if (!isPublicRoute(request)) {
+    auth.protect()
   }
-
-  // 一旦、認証チェックを簡略化（クライアント側で処理）
-  // middlewareでの複雑な認証チェックは避け、クライアント側のAuthProviderに委ねる
-  return NextResponse.next()
-}
+})
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)  
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 }

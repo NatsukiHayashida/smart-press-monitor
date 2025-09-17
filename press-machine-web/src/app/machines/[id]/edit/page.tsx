@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { PressMachine } from '@/types/database'
@@ -21,7 +21,7 @@ export default function MachineEditPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const orgId = getEffectiveOrgId(profile)
   const machineId = params?.id as string
 

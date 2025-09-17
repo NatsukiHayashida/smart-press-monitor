@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
@@ -41,22 +41,28 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
   const orgId = getEffectiveOrgId(profile)
 
   const loadDashboardData = async () => {
-    if (!orgId) return
+    if (!orgId) {
+      console.log('❌ No orgId available')
+      return
+    }
 
+    console.log('🔄 Loading dashboard data for orgId:', orgId)
     setIsLoading(true)
     setError(null)
 
     try {
       // 総台数取得
+      console.log('📊 Querying press_machines for org_id:', orgId)
       const { count: totalMachines, error: machineCountError } = await supabase
         .from('press_machines')
         .select('*', { count: 'exact', head: true })
         .eq('org_id', orgId)
 
+      console.log('📊 Press machines query result:', { count: totalMachines, error: machineCountError })
       if (machineCountError) throw machineCountError
 
       // プレス機データ取得（種別・グループ集計用）
@@ -140,10 +146,10 @@ export default function DashboardPage() {
     loadDashboardData()
   }, [loading, user, orgId])
 
-  // 認証チェック - loadingがfalseでuserがない場合はログインページへリダイレクト
+  // 認証チェック - loadingがfalseでuserがない場合はClerkサインインページへリダイレクト
   useEffect(() => {
     if (!loading && !user) {
-      window.location.href = '/auth/login'
+      window.location.href = '/auth/sign-in'
     }
   }, [loading, user])
 

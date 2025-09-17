@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { supabaseBrowser } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { AlertCircle } from 'lucide-react'
@@ -47,7 +47,7 @@ export function MaintenanceForm({
   const [loading, setLoading] = useState(false)
   const [machines, setMachines] = useState<Machine[]>([])
   const [error, setError] = useState<string | null>(null)
-  const supabase = supabaseBrowser()
+  const supabase = createClient()
 
   const [formData, setFormData] = useState(() => {
     if (initialData) {

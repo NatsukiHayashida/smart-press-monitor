@@ -61,7 +61,7 @@ export function Header() {
                 </Button>
               </div>
             ) : (
-              <Link href="/auth/login">
+              <Link href="/auth/sign-in">
                 <Button>ログイン</Button>
               </Link>
             )}

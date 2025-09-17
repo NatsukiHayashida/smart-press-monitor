@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useSupabaseClient } from '@/lib/supabase-clerk'
+import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { MaintenanceRecord, PressMachine } from '@/types/database'
@@ -17,7 +17,7 @@ import Link from 'next/link'
 export default function MaintenanceDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const supabase = useSupabaseClient()
+  const supabase = createClient()
   const { user, profile, loading } = useAuth()
   const [record, setRecord] = useState<MaintenanceRecord | null>(null)
   const [machine, setMachine] = useState<PressMachine | null>(null)
