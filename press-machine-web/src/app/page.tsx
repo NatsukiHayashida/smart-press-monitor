@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabaseClient } from '@/lib/supabase-clerk'
 import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
@@ -41,7 +41,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  const supabase = createClient()
+  const supabase = useSupabaseClient()
   const orgId = getEffectiveOrgId(profile)
 
   const loadDashboardData = async () => {

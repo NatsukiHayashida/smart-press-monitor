@@ -26,7 +26,8 @@
       "Bash(powershell:*)",
       "Bash(npm uninstall:*)",
       "Read(//c/Users/CATIA/Documents/Claude/press_machine_db/docs/**)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
