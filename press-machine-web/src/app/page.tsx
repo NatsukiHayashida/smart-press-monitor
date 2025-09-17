@@ -143,16 +143,16 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-4xl w-full mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {/* ヘッダーセクション */}
-        <div className="mb-6">
+        <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Database className="w-8 h-8 mr-3 text-blue-600" />
+              <h1 className="text-3xl font-bold text-gray-900 flex items-center leading-tight">
+                <Database className="w-8 h-8 mr-4 text-blue-600" />
                 ダッシュボード
               </h1>
-              <p className="text-gray-600">プレス機管理システムの概要</p>
+              <p className="text-gray-700 mt-2 leading-relaxed">プレス機管理システムの概要</p>
             </div>
             <Button onClick={loadDashboardData} disabled={isLoading}>
               <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
@@ -162,22 +162,22 @@ export default function DashboardPage() {
         </div>
 
         {dashboardData && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* 基本統計カード */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
-                    <Settings className="w-4 h-4 mr-2" />
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-700 flex items-center">
+                    <Settings className="w-5 h-5 mr-3 text-blue-600" />
                     総プレス機台数
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-blue-600">
+                  <div className="text-4xl font-bold text-blue-600 leading-tight">
                     {dashboardData.totalMachines}台
                   </div>
                   <Link href="/machines">
-                    <Button variant="outline" size="sm" className="mt-3">
+                    <Button variant="outline" size="sm" className="mt-4">
                       一覧を見る <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                   </Link>
@@ -185,18 +185,18 @@ export default function DashboardPage() {
               </Card>
 
               <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
-                    <Wrench className="w-4 h-4 mr-2" />
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-700 flex items-center">
+                    <Wrench className="w-5 h-5 mr-3 text-green-600" />
                     総メンテナンス記録
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-green-600">
+                  <div className="text-4xl font-bold text-green-600 leading-tight">
                     {dashboardData.totalMaintenance}件
                   </div>
                   <Link href="/maintenance">
-                    <Button variant="outline" size="sm" className="mt-3">
+                    <Button variant="outline" size="sm" className="mt-4">
                       一覧を見る <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                   </Link>
@@ -209,13 +209,13 @@ export default function DashboardPage() {
               {/* 種別別集計 */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Settings className="w-5 h-5 mr-2 text-blue-600" />
+                  <CardTitle className="text-xl font-semibold text-gray-900 flex items-center leading-snug">
+                    <Settings className="w-6 h-6 mr-3 text-blue-600" />
                     種別別集計
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {Object.entries(dashboardData.machinesByType).map(([type, count]) => (
                       <div key={type} className="flex justify-between items-center">
                         <span className="text-gray-700">{type}</span>

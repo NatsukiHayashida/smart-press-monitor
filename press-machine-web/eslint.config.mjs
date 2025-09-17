@@ -1,24 +1,47 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import js from "@eslint/js";
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  // 全体に適用する無視設定
   {
     ignores: [
-      "node_modules/**",
       ".next/**",
       "out/**",
       "build/**",
+      "node_modules/**",
+      "*.config.*",
       "next-env.d.ts",
+      "*.min.js",
+      "test-*.js", // ルートレベルのテストファイル
+      "../debug/**",
+      "../scripts/**",
+      "../python/**",
+      "../database/**",
     ],
+  },
+  // JavaScriptファイルのみ
+  {
+    ...js.configs.recommended,
+    files: ["**/*.{js,jsx}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        Buffer: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        require: "readonly",
+        module: "readonly",
+        exports: "readonly",
+        global: "readonly",
+      },
+    },
+    rules: {
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "prefer-const": "warn",
+    },
   },
 ];
 
