@@ -19,80 +19,31 @@ function createAdminSupabaseClient() {
 
 export async function GET() {
   try {
-    // 環境変数デバッグ
-    console.log('🔧 Environment variables check:')
-    console.log('- NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing')
-    console.log('- SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Missing')
-    console.log('- NEXT_PUBLIC_DEFAULT_ORG_ID:', process.env.NEXT_PUBLIC_DEFAULT_ORG_ID || 'Missing')
-
     // Clerk認証確認
     const user = await currentUser()
 
     if (!user) {
-      console.log('❌ No authenticated user found')
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    console.log('🔐 Clerk User ID:', user.id)
-    console.log('🔐 Clerk User Email:', user.emailAddresses[0]?.emailAddress)
-
     const supabase = createAdminSupabaseClient()
     const orgId = process.env.NEXT_PUBLIC_DEFAULT_ORG_ID
 
     if (!orgId) {
-      console.log('❌ Organization ID not configured')
       return NextResponse.json(
         { error: 'Organization ID not configured' },
         { status: 500 }
       )
     }
 
-    console.log('🏢 Using orgId:', orgId)
-
-    // Supabase接続テスト
-    console.log('🔌 Testing Supabase connection...')
-    const { data: connectionTest, error: connectionError } = await supabase
-      .from('orgs')
-      .select('id, name')
-      .limit(1)
-
-    if (connectionError) {
-      console.error('❌ Supabase connection failed:', connectionError)
-      return NextResponse.json(
-        { error: 'Database connection failed', details: connectionError.message },
-        { status: 500 }
-      )
-    }
-
-    console.log('✅ Supabase connection successful, orgs sample:', connectionTest)
-
-    // 全プレス機台数確認（org_idフィルタなし）
-    console.log('🔍 Checking total machines in database (without org filter)...')
-    const { count: totalMachinesAll, error: allMachinesError } = await supabase
-      .from('press_machines')
-      .select('*', { count: 'exact', head: true })
-
-    console.log('📊 Total machines in DB (all):', totalMachinesAll, 'Error:', allMachinesError)
-
-    // org_idでの検索
-    console.log(`🔍 Checking machines for org_id: "${orgId}"`)
+    // 総プレス機台数取得
     const { count: totalMachines, error: machineCountError } = await supabase
       .from('press_machines')
       .select('*', { count: 'exact', head: true })
       .eq('org_id', orgId)
-
-    console.log('📊 Total machines for org:', totalMachines, 'Error:', machineCountError)
-
-    // 実際のorg_idを確認
-    const { data: machineOrgIds, error: orgIdsError } = await supabase
-      .from('press_machines')
-      .select('org_id')
-      .limit(10)
-
-    console.log('📋 Sample org_ids in press_machines:', machineOrgIds?.map(m => m.org_id))
 
     if (machineCountError) {
       console.error('Machine count error:', machineCountError)
