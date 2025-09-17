@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { useSupabaseClient } from '@/lib/supabase-clerk'
-import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,7 +18,6 @@ import {
   Database
 } from 'lucide-react'
 import Link from 'next/link'
-import { getProductionGroupName } from '@/lib/productionGroups'
 
 interface DashboardData {
   totalMachines: number
@@ -36,103 +33,35 @@ interface DashboardData {
 }
 
 export default function DashboardPage() {
-  const { user, profile, loading } = useAuth()
+  const { user, loading } = useAuth()
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
-  const supabase = useSupabaseClient()
-  const orgId = getEffectiveOrgId(profile)
 
   const loadDashboardData = async () => {
-    if (!orgId) {
-      console.log('❌ No orgId available')
-      return
-    }
-
-    console.log('🔄 Loading dashboard data for orgId:', orgId)
+    console.log('🔄 Loading dashboard data via API...')
     setIsLoading(true)
     setError(null)
 
     try {
-      // 総台数取得
-      console.log('📊 Querying press_machines for org_id:', orgId)
-      const { count: totalMachines, error: machineCountError } = await supabase
-        .from('press_machines')
-        .select('*', { count: 'exact', head: true })
-        .eq('org_id', orgId)
-
-      console.log('📊 Press machines query result:', { count: totalMachines, error: machineCountError })
-      if (machineCountError) throw machineCountError
-
-      // プレス機データ取得（種別・グループ集計用）
-      const { data: machinesData, error: machinesError } = await supabase
-        .from('press_machines')
-        .select('machine_type, production_group, machine_number')
-        .eq('org_id', orgId)
-
-      if (machinesError) throw machinesError
-
-      // 種別別集計
-      const machinesByType = (machinesData as any[])?.reduce((acc: { [key: string]: number }, machine: any) => {
-        acc[machine.machine_type] = (acc[machine.machine_type] || 0) + 1
-        return acc
-      }, {}) || {}
-
-      // グループ別集計
-      const machinesByGroup = (machinesData as any[])?.reduce((acc: { [key: string]: number }, machine: any) => {
-        const group = getProductionGroupName(machine.production_group)
-        acc[group] = (acc[group] || 0) + 1
-        return acc
-      }, {}) || {}
-
-      // 総メンテナンス記録数
-      const { count: totalMaintenance, error: maintenanceCountError } = await supabase
-        .from('maintenance_records')
-        .select('*', { count: 'exact', head: true })
-        .eq('org_id', orgId)
-
-      if (maintenanceCountError) throw maintenanceCountError
-
-      // 最近のメンテナンス記録（5件）
-      const { data: recentMaintenanceData, error: recentMaintenanceError } = await supabase
-        .from('maintenance_records')
-        .select('id, maintenance_date, overall_judgment, press_id')
-        .eq('org_id', orgId)
-        .order('maintenance_date', { ascending: false })
-        .limit(5)
-
-      if (recentMaintenanceError) throw recentMaintenanceError
-
-      // プレス機の番号を取得
-      const recentMaintenance = []
-      for (const record of (recentMaintenanceData as any[]) || []) {
-        const { data: machineData, error: machineError } = await supabase
-          .from('press_machines')
-          .select('machine_number')
-          .eq('id', record.press_id)
-          .single()
-        
-        if (!machineError && machineData) {
-          recentMaintenance.push({
-            id: record.id,
-            machine_number: machineData.machine_number,
-            maintenance_date: record.maintenance_date,
-            overall_judgment: record.overall_judgment
-          })
-        }
-      }
-
-      setDashboardData({
-        totalMachines: totalMachines || 0,
-        machinesByType,
-        machinesByGroup,
-        totalMaintenance: totalMaintenance || 0,
-        recentMaintenance
+      const response = await fetch('/api/dashboard', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
 
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch dashboard data')
+      }
+
+      const data = await response.json()
+      console.log('✅ Dashboard data received:', data)
+      setDashboardData(data)
+
     } catch (error: any) {
-      console.error('Dashboard data loading error:', error)
+      console.error('❌ Dashboard data loading error:', error)
       setError(error.message)
     } finally {
       setIsLoading(false)
@@ -141,10 +70,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (loading) return
-    if (!user || !orgId) return
-    
+    if (!user) return
+
     loadDashboardData()
-  }, [loading, user, orgId])
+  }, [loading, user])
 
   // 認証チェック - loadingがfalseでuserがない場合はClerkサインインページへリダイレクト
   useEffect(() => {
