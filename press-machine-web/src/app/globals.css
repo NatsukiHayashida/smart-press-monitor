@@ -46,70 +46,70 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.17 0.009 38);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
+  --card-foreground: oklch(0.17 0.009 38);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+  --popover-foreground: oklch(0.17 0.009 38);
+  --primary: oklch(0.70 0.19 48);
+  --primary-foreground: oklch(0.98 0.02 74);
+  --secondary: oklch(0.95 0.04 75);
+  --secondary-foreground: oklch(0.47 0.14 37);
+  --muted: oklch(0.95 0.04 75);
+  --muted-foreground: oklch(0.55 0.17 38);
+  --accent: oklch(0.90 0.07 71);
+  --accent-foreground: oklch(0.47 0.14 37);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.90 0.07 71);
+  --input: oklch(0.90 0.07 71);
+  --ring: oklch(0.70 0.19 48);
+  --chart-1: oklch(0.70 0.19 48);
+  --chart-2: oklch(0.84 0.12 66);
+  --chart-3: oklch(0.76 0.16 56);
+  --chart-4: oklch(0.55 0.17 38);
+  --chart-5: oklch(0.41 0.12 38);
+  --sidebar: oklch(0.98 0.02 74);
+  --sidebar-foreground: oklch(0.47 0.14 37);
+  --sidebar-primary: oklch(0.70 0.19 48);
+  --sidebar-primary-foreground: oklch(0.98 0.02 74);
+  --sidebar-accent: oklch(0.95 0.04 75);
+  --sidebar-accent-foreground: oklch(0.47 0.14 37);
+  --sidebar-border: oklch(0.90 0.07 71);
+  --sidebar-ring: oklch(0.70 0.19 48);
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.27 0.08 36);
+  --foreground: oklch(0.98 0.02 74);
+  --card: oklch(0.41 0.12 38);
+  --card-foreground: oklch(0.98 0.02 74);
+  --popover: oklch(0.41 0.12 38);
+  --popover-foreground: oklch(0.98 0.02 74);
+  --primary: oklch(0.70 0.19 48);
+  --primary-foreground: oklch(0.27 0.08 36);
+  --secondary: oklch(0.47 0.14 37);
+  --secondary-foreground: oklch(0.98 0.02 74);
+  --muted: oklch(0.47 0.14 37);
+  --muted-foreground: oklch(0.84 0.12 66);
+  --accent: oklch(0.55 0.17 38);
+  --accent-foreground: oklch(0.98 0.02 74);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.552 0.016 285.938);
+  --border: oklch(0.55 0.17 38);
+  --input: oklch(0.47 0.14 37);
+  --ring: oklch(0.70 0.19 48);
+  --chart-1: oklch(0.70 0.19 48);
+  --chart-2: oklch(0.84 0.12 66);
+  --chart-3: oklch(0.76 0.16 56);
+  --chart-4: oklch(0.55 0.17 38);
+  --chart-5: oklch(0.41 0.12 38);
+  --sidebar: oklch(0.41 0.12 38);
+  --sidebar-foreground: oklch(0.98 0.02 74);
+  --sidebar-primary: oklch(0.70 0.19 48);
+  --sidebar-primary-foreground: oklch(0.27 0.08 36);
+  --sidebar-accent: oklch(0.47 0.14 37);
+  --sidebar-accent-foreground: oklch(0.98 0.02 74);
+  --sidebar-border: oklch(0.55 0.17 38);
+  --sidebar-ring: oklch(0.70 0.19 48);
 }
 
 @layer base {
@@ -118,5 +118,102 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* 印刷用スタイル */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm 10mm;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* ヘッダーとナビゲーションを非表示 */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* 印刷時のテーブルスタイル */
+  .print-table {
+    width: 100% !important;
+    font-size: 8pt !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    border: none !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    padding: 4px 6px !important;
+    text-align: left !important;
+    font-size: 8pt !important;
+    border: none !important;
+  }
+
+  .print-table th {
+    background-color: #f5f5f5 !important;
+    font-weight: bold !important;
+  }
+
+  /* 行の交互背景色 */
+  .print-table tbody tr:nth-child(even) td {
+    background-color: #f9f9f9 !important;
+  }
+
+  .print-table tbody tr:nth-child(odd) td {
+    background-color: #ffffff !important;
+  }
+
+  /* テーブル全体の角丸 */
+  .print-table-container {
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    border: none !important;
+  }
+
+  /* バッジスタイルを印刷用に調整 */
+  .print-badge {
+    border: 1px solid #666 !important;
+    padding: 1px 4px !important;
+    border-radius: 3px !important;
+    font-size: 7pt !important;
+    background-color: transparent !important;
+    color: #000 !important;
+  }
+
+  /* カード要素の調整 */
+  .print-card {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* タイトル部分の調整 */
+  .print-title {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    margin-bottom: 10pt !important;
+    border-bottom: 1px solid #000 !important;
+    padding-bottom: 5pt !important;
+  }
+
+  /* ページ分割を防ぐ */
+  .print-no-break {
+    page-break-inside: avoid !important;
+  }
+
+  /* 余分なスペースを削除 */
+  .print-compact {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }

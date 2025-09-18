@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import { getProductionGroupName } from '@/lib/productionGroups'
+import { Printer } from 'lucide-react'
 
 interface MachineTableProps {
   machines: PressMachine[]
@@ -24,6 +25,10 @@ interface MachineTableProps {
 
 export function MachineTable({ machines, onRefresh }: MachineTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
+
+  const handlePrint = () => {
+    window.print()
+  }
 
   // バッジ色の定義
   const machineTypeColors: {[key: string]: string} = {
@@ -49,8 +54,8 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
   )
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="print-card">
+      <CardHeader className="print-hide">
         <div className="flex justify-between items-center">
           <CardTitle>プレス機一覧</CardTitle>
           <div className="flex gap-2 items-center">
@@ -60,6 +65,10 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-80"
             />
+            <Button onClick={handlePrint} variant="outline" className="flex items-center gap-2">
+              <Printer className="w-4 h-4" />
+              印刷
+            </Button>
             {onRefresh && (
               <Button onClick={onRefresh} variant="outline">
                 更新
@@ -71,9 +80,14 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
+
+      {/* 印刷用タイトル */}
+      <div className="hidden print:block print-title">
+        プレス機一覧
+      </div>
+      <CardContent className="print-compact">
+        <div className="rounded-md border print-no-break print-table-container">
+          <Table className="print-table">
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">ID</TableHead>
@@ -85,7 +99,7 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
                 <TableHead>グループ</TableHead>
                 <TableHead>トン数</TableHead>
                 <TableHead>登録日</TableHead>
-                <TableHead>操作</TableHead>
+                <TableHead className="print-hide">操作</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -97,7 +111,7 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
                 </TableRow>
               ) : (
                 filteredMachines.map((machine) => (
-                  <TableRow key={machine.id}>
+                  <TableRow key={machine.id} className="print-no-break">
                     <TableCell className="font-mono text-sm text-center text-primary">{machine.id}</TableCell>
                     <TableCell className="font-semibold text-center text-green-600">{machine.machine_number}</TableCell>
                     <TableCell className="text-center">{machine.equipment_number || '-'}</TableCell>
@@ -106,21 +120,29 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
                     <TableCell>
                       <Badge
                         variant="outline"
-                        className={machineTypeColors[machine.machine_type] || machineTypeColors['その他']}
+                        className={`${machineTypeColors[machine.machine_type] || machineTypeColors['その他']} print:hidden`}
                       >
                         {machine.machine_type}
                       </Badge>
+                      <span className="hidden print:inline">
+                        {machine.machine_type}
+                      </span>
                     </TableCell>
                     <TableCell>
                       {(() => {
                         const groupName = getProductionGroupName(machine.production_group)
                         return (
-                          <Badge
-                            variant="outline"
-                            className={groupColors[groupName] || groupColors['その他']}
-                          >
-                            {groupName}
-                          </Badge>
+                          <>
+                            <Badge
+                              variant="outline"
+                              className={`${groupColors[groupName] || groupColors['その他']} print:hidden`}
+                            >
+                              {groupName}
+                            </Badge>
+                            <span className="hidden print:inline">
+                              {groupName}
+                            </span>
+                          </>
                         )
                       })()}
                     </TableCell>
@@ -128,7 +150,7 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
                     <TableCell className="text-sm text-muted-foreground">
                       {new Date(machine.created_at).toLocaleDateString('ja-JP')}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="print-hide">
                       <div className="flex gap-1">
                         <Link href={`/machines/${machine.id}`}>
                           <Button variant="outline" size="sm">
@@ -143,9 +165,14 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
             </TableBody>
           </Table>
         </div>
-        
-        <div className="mt-4 text-sm text-muted-foreground">
+
+        <div className="mt-4 text-sm text-muted-foreground print-hide">
           {filteredMachines.length} / {machines.length} 台を表示
+        </div>
+
+        {/* 印刷用フッター */}
+        <div className="hidden print:block text-right text-sm mt-6" style={{fontSize: '10pt', marginTop: '20pt'}}>
+          {filteredMachines.length}/{machines.length}台を表示
         </div>
       </CardContent>
     </Card>

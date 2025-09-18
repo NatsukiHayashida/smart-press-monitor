@@ -37,6 +37,7 @@ claude mcp list
 # - serena: 高度なコード検索・編集・リファクタリング
 # - context7: 最新ライブラリドキュメント参照 (プロンプトに "use context7" を追加)
 # - playwright: ブラウザ自動化・E2Eテスト・Web操作
+# - shadcn: shadcn/uiコンポーネントの検索・インストール・管理
 
 # MCPサーバーの再起動
 claude mcp restart [server_name]
@@ -133,6 +134,11 @@ const form = useForm({ resolver: zodResolver(schema) })
    - Web UIの自動テスト・検証
    - フォーム操作やナビゲーションの動作確認
    - E2Eテストシナリオの実行
+
+4. **shadcn/ui MCP**
+   - shadcn/uiコンポーネントの検索・参照
+   - 自然言語でのコンポーネントインストール
+   - 複数レジストリからのコンポーネント取得
 
 ### 既知の問題と解決策
 
