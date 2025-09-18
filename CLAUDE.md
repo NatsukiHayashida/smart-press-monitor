@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # まずWebアプリケーションディレクトリに移動
 cd press-machine-web
 
-# 開発サーバーを起動（ポート3001で実行）
+# 開発サーバーを起動（動的ポート割り当て）
 npm run dev
 
 # 本番用ビルド
@@ -26,6 +26,10 @@ npm run lint
 ```bash
 # SupabaseスキーマからTypeScript型を生成
 npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/database.ts
+
+# データベーススキーマファイルの場所
+# database/supabase_schema.sql - メインスキーマ
+# database/sample_data.sql - サンプルデータ
 ```
 
 ### MCPツール管理
