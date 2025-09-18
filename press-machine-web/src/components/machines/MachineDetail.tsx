@@ -291,7 +291,7 @@ export function MachineDetail({ machine }: MachineDetailProps) {
             </div>
             <div>
               <label className="font-medium">機械ID</label>
-              <p className="font-mono text-blue-600">#{machine.id}</p>
+              <p className="font-mono text-primary">#{machine.id}</p>
             </div>
           </div>
         </CardContent>

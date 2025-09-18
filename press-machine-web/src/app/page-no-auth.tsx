@@ -15,9 +15,9 @@ export default function SimplePage() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-            <div className="bg-blue-50 p-4 rounded">
-              <h3 className="font-medium text-blue-900">✅ Next.js</h3>
-              <p className="text-sm text-blue-700">フレームワーク動作中</p>
+            <div className="bg-secondary p-4 rounded">
+              <h3 className="font-medium text-secondary-foreground">✅ Next.js</h3>
+              <p className="text-sm text-secondary-foreground">フレームワーク動作中</p>
             </div>
             <div className="bg-green-50 p-4 rounded">
               <h3 className="font-medium text-green-900">✅ Tailwind CSS</h3>

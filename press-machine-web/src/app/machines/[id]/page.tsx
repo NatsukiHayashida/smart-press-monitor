@@ -185,7 +185,7 @@ export default function MachineDetailPage() {
         <Header />
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-gray-600">機械情報を読み込んでいます...</p>
           </div>
         </div>
@@ -387,7 +387,7 @@ export default function MachineDetailPage() {
                       const getPriorityColor = (priority: string) => {
                         switch (priority) {
                           case 'high': return 'bg-red-100 text-red-800'
-                          case 'normal': return 'bg-blue-100 text-blue-800'
+                          case 'normal': return 'bg-secondary text-secondary-foreground'
                           case 'low': return 'bg-gray-100 text-gray-800'
                           default: return 'bg-gray-100 text-gray-800'
                         }

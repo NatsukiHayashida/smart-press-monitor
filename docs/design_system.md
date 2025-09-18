@@ -1,63 +1,131 @@
 ## 1. 基本理念
+
+Apple Human Interface Guidelines の洗練されたデザイン哲学を基盤としつつ、産業用プレス機管理システムとしての機能性と信頼性を表現します。現代的なデザインシステム（shadcn/ui）を採用し、清潔感・明瞭性・直感性を追求し、アクセシビリティを最優先に考慮したユーザー体験を提供します。
+
+## 2. テーマシステム（shadcn/ui準拠）
+
+### CSS変数ベースのテーマ設定
+
+現代的なテーマ管理のため、CSS変数を使用したshadcn/uiのテーマシステムを採用します。`components.json`で`cssVariables: true`を設定し、柔軟で保守性の高いデザインシステムを構築します。
  
-Apple Human Interface Guidelines の洗練されたデザイン哲学を基盤としつつ、教育プラットフォームとしての独自性を表現します。ブランドカラーの青を軸に、清潔感・明瞭性・直感性を追求し、アクセシビリティを最優先に考慮したユーザー体験を提供します。
- 
-## 2. 配色システム
- 
-配色は個別CSSで定義せず、Tailwind CSS のユーティリティクラスのみを使用する。
- 
-### プライマリカラー（WCAG 適合）
- 
-- メインブルー: blue-500 (#3B82F6) - 主要アクション、選択状態
-- ダークブルー: blue-600 (#2563EB) - ホバー状態、強調
-- 強調ブルー: blue-700 (#1D4ED8) - テキスト用、高コントラスト
-- 超強調ブルー: blue-800 (#1E40AF) - 白背景でのテキスト、AAA 対応
-- ライトブルー: blue-50 (#EFF6FF) - 背景、選択エリア（使用は最小限に）
-- ミドルブルー: blue-100 (#DBEAFE) - アイコン・バッジ背景（使用は最小限に、blue-200 で枠を付ける）
- 
-### グレースケール（アクセシビリティ最適化）
- 
-- テキストメイン: gray-900 (#111827) - 主要テキスト（コントラスト比 21:1）
-- テキストサブ: gray-700 (#374151) - 補助テキスト（コントラスト比 12.6:1）
-- テキストキャプション: gray-600 (#4B5563) - 注釈、説明文（コントラスト比 7:1）
-- 薄めテキスト: gray-500 (#6B7280) - 非重要テキスト（コントラスト比 4.5:1）
-- 境界線: gray-300 (#D1D5DB) - 区切り線、カード境界
-- 薄境界線: gray-200 (#E5E7EB) - 軽い区切り線
-- 背景: white (#FFFFFF) - 基本背景（薄色背景は極力避ける）
-- セクション背景: gray-50 (#F9FAFB) - 必要な場合のみ使用
- 
-### システムカラー（コントラスト配慮）
- 
-- 成功: green-600 (#059669) - コントラスト比 7:1 確保
-- 警告: amber-600 (#D97706) - コントラスト比 7:1 確保
-- エラー: red-600 (#DC2626) - コントラスト比 7:1 確保
-- 情報: blue-700 (#1D4ED8) - コントラスト比 7:1 確保
+### CSS変数定義（Zinc Theme - 産業システム適合）
+
+```css
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.21 0.006 285.885);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067);
+}
+
+.dark {
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.92 0.004 286.32);
+  --primary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+}
+```
+
+### Tailwindクラスでの使用方法
+
+```tsx
+// 基本的な背景とテキスト
+<div className="bg-background text-foreground" />
+
+// プライマリボタン
+<button className="bg-primary text-primary-foreground" />
+
+// カード
+<div className="bg-card text-card-foreground border border-border" />
+
+// 入力フィールド
+<input className="bg-background border border-input text-foreground" />
+```
+
+### カスタムカラー追加例
+
+プロジェクト固有の「警告」カラーを追加する場合：
+
+```css
+:root {
+  --warning: oklch(0.84 0.16 84);
+  --warning-foreground: oklch(0.28 0.07 46);
+}
+
+.dark {
+  --warning: oklch(0.41 0.11 46);
+  --warning-foreground: oklch(0.99 0.02 95);
+}
+
+@theme inline {
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+}
+```
  
 ### カラー使用ルール
  
-- 白背景でのテキスト色は gray-700 以上を使用
-- 青背景でのテキスト色は常に白色（#FFFFFF）
-- 同色系の組み合わせは避ける（青背景に青ボタンなど）
-- 薄色背景（-50, -100 系）は極力使用しない
-- UI コンポーネントの境界は 3:1 以上のコントラスト確保
+- 基本的にshadcn/uiの定義済み変数を使用（`bg-background`, `text-foreground`など）
+- カスタムカラーが必要な場合のみ新規変数を定義
+- ダークモードとライトモードの両方に対応した値を設定
+- WCAG 2.1準拠のコントラスト比を確保（4.5:1以上、理想的には7:1以上）
+- 同じ色相の変数同士の組み合わせは避ける
  
-## 3. 角丸システム
- 
+## 3. 角丸システム（CSS変数ベース）
+
+### radius変数の使用
+
+shadcn/uiでは`--radius`変数で統一的な角丸を管理します：
+
+```css
+:root {
+  --radius: 0.625rem; /* 10px */
+}
+```
+
 ### コンポーネント別設定
- 
-- 小ボタン: rounded-lg (8px 相当)
-- 標準ボタン: rounded-xl (12px 相当)
-- 大ボタン: rounded-2xl (16px 相当)
-- カード: rounded-2xl (16px 相当)
-- モーダル: rounded-3xl (24px 相当)
-- 入力フィールド: rounded-lg (8px 相当)
-- アイコンボタン: rounded-full（円形）
- 
-### 角丸使用原則
- 
-- 同一コンポーネント内では統一の角丸値を使用
-- 親子関係にあるコンポーネントは角丸値を階層化
-- 過度に大きな角丸値は避ける
+
+- **ボタン**: `rounded-md` (--radius * 0.8)
+- **カード**: `rounded-lg` (--radius)
+- **入力フィールド**: `rounded-md` (--radius * 0.8)
+- **モーダル・ダイアログ**: `rounded-lg` (--radius)
+- **ドロップダウン・ポップオーバー**: `rounded-md` (--radius * 0.8)
+- **バッジ・ラベル**: `rounded-full` または `rounded-md`
+
+### shadcn/ui推奨クラス
+
+```tsx
+// 基本的な角丸
+<div className="rounded-md" />
+
+// カード用
+<div className="rounded-lg" />
+
+// 完全に丸い要素
+<div className="rounded-full" />
+```
  
 ## 4. 余白体系
  

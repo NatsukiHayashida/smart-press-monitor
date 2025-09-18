@@ -36,7 +36,7 @@ export function SpecificationCard({ title, icon, items }: SpecificationCardProps
           {validItems.map((item, index) => (
             <div key={index}>
               <label className="text-sm font-medium text-gray-500">{item.label}</label>
-              <p className={`${item.highlight ? 'text-lg font-semibold text-blue-600' : 'font-medium'}`}>
+              <p className={`${item.highlight ? 'text-lg font-semibold text-primary' : 'font-medium'}`}>
                 {item.value}
               </p>
             </div>

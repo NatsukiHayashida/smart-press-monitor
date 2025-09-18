@@ -8,6 +8,7 @@ description: Press Machine Management System - Next.js web application with Supa
 root: .
 
 # 言語設定
+language: typescript
 languages:
   - typescript
   - javascript

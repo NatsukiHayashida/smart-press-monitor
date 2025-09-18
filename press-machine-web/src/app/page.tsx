@@ -88,7 +88,7 @@ export default function DashboardPage() {
         <Header />
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-gray-600">認証状態を確認しています...</p>
           </div>
         </div>
@@ -115,7 +115,7 @@ export default function DashboardPage() {
         <Header />
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-gray-600">ダッシュボードを読み込んでいます...</p>
           </div>
         </div>
@@ -149,7 +149,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center leading-tight">
-                <Database className="w-8 h-8 mr-4 text-blue-600" />
+                <Database className="w-8 h-8 mr-4 text-primary" />
                 ダッシュボード
               </h1>
               <p className="text-gray-700 mt-2 leading-relaxed">プレス機管理システムの概要</p>
@@ -168,12 +168,12 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg font-semibold text-gray-700 flex items-center">
-                    <Settings className="w-5 h-5 mr-3 text-blue-600" />
+                    <Settings className="w-5 h-5 mr-3 text-primary" />
                     総プレス機台数
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-4xl font-bold text-blue-600 leading-tight">
+                  <div className="text-4xl font-bold text-primary leading-tight">
                     {dashboardData.totalMachines}台
                   </div>
                   <Link href="/machines">
@@ -210,7 +210,7 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-xl font-semibold text-gray-900 flex items-center leading-snug">
-                    <Settings className="w-6 h-6 mr-3 text-blue-600" />
+                    <Settings className="w-6 h-6 mr-3 text-primary" />
                     種別別集計
                   </CardTitle>
                 </CardHeader>

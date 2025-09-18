@@ -63,7 +63,7 @@ export function MaintenanceScheduleTable({ schedules, onRefresh, onNew }: Mainte
       case 'high':
         return 'bg-red-100 text-red-800'
       case 'normal':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-secondary text-secondary-foreground'
       case 'low':
         return 'bg-gray-100 text-gray-800'
       default:
@@ -74,7 +74,7 @@ export function MaintenanceScheduleTable({ schedules, onRefresh, onNew }: Mainte
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'scheduled':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-secondary text-secondary-foreground'
       case 'in_progress':
         return 'bg-yellow-100 text-yellow-800'
       case 'completed':

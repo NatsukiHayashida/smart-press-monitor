@@ -116,7 +116,7 @@ export default function MaintenancePage() {
         <Header />
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-gray-600">認証情報を確認中...</p>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function MaintenancePage() {
         <Header />
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-gray-600">メンテナンス記録を読み込んでいます...</p>
           </div>
         </div>

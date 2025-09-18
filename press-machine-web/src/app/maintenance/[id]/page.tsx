@@ -129,7 +129,7 @@ export default function MaintenanceDetailPage() {
         <Header />
         <div className="max-w-7xl mx-auto py-6 px-4">
           <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-2 text-gray-600">メンテナンス記録を読み込んでいます...</p>
           </div>
         </div>
@@ -208,7 +208,7 @@ export default function MaintenanceDetailPage() {
               </Link>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <Wrench className="w-8 h-8 mr-3 text-blue-600" />
+                  <Wrench className="w-8 h-8 mr-3 text-primary" />
                   メンテナンス記録詳細
                 </h1>
                 <p className="text-gray-600">
@@ -234,7 +234,7 @@ export default function MaintenanceDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <Calendar className="w-5 h-5 mr-2 text-blue-600" />
+                  <Calendar className="w-5 h-5 mr-2 text-primary" />
                   基本情報
                 </CardTitle>
               </CardHeader>

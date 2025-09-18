@@ -62,7 +62,7 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
   const getReplacementColor = (replacement: string) => {
     switch (replacement) {
       case '実施':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-secondary text-secondary-foreground'
       case '未実施':
         return 'bg-gray-100 text-gray-600'
       case '不要':
