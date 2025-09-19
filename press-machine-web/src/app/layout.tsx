@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import { extendedJaJP } from "@/locales/extended_ja_jp";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart Press Monitor",
-  description: "スマートプレス機監視システム - プレス機とメンテナンス記録の統合管理",
+  title: "プレス機械管理システム",
+  description: "プレス機械とメンテナンス記録の統合管理システム",
 };
 
 export default function RootLayout({
@@ -25,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={extendedJaJP}>
       <html lang="ja">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
