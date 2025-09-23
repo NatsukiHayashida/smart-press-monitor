@@ -14,16 +14,31 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Edit, Trash2 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useRouter } from 'next/navigation'
 
 interface MaintenanceTableProps {
   records: MaintenanceRecordWithMachine[]
   onRefresh?: () => void
   onNew: () => void
+  onDelete?: (id: number) => Promise<void>
 }
 
-export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTableProps) {
+export function MaintenanceTable({ records, onRefresh, onNew, onDelete }: MaintenanceTableProps) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [recordToDelete, setRecordToDelete] = useState<number | null>(null)
+  const [recordToDeleteDetails, setRecordToDeleteDetails] = useState<{ machineNumber: string; date: string } | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
 
   // デバッグ用ログ
@@ -44,6 +59,37 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
     const editUrl = `/maintenance/${recordId}/edit`
     console.log('Navigating to:', editUrl)
     router.push(editUrl)
+  }
+
+  const handleDeleteClick = (record: any) => {
+    setRecordToDelete(record.id)
+    setRecordToDeleteDetails({
+      machineNumber: record.press_machines.machine_number,
+      date: new Date(record.maintenance_date).toLocaleDateString('ja-JP')
+    })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (recordToDelete && onDelete) {
+      setIsDeleting(true)
+      try {
+        await onDelete(recordToDelete)
+        setDeleteDialogOpen(false)
+        setRecordToDelete(null)
+        setRecordToDeleteDetails(null)
+      } catch (error) {
+        console.error('Delete failed:', error)
+      } finally {
+        setIsDeleting(false)
+      }
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false)
+    setRecordToDelete(null)
+    setRecordToDeleteDetails(null)
   }
 
   const getJudgmentColor = (judgment: string) => {
@@ -161,9 +207,21 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
                           size="sm"
                           onClick={() => handleEdit(record.id)}
                           className="h-8 w-8 p-0"
+                          title="編集"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
+                        {onDelete && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteClick(record)}
+                            className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                            title="削除"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -177,6 +235,38 @@ export function MaintenanceTable({ records, onRefresh, onNew }: MaintenanceTable
           {filteredRecords.length} / {records.length} 件を表示
         </div>
       </CardContent>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>メンテナンス記録を削除しますか？</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <p>以下のメンテナンス記録を削除しようとしています：</p>
+                {recordToDeleteDetails && (
+                  <div className="bg-gray-50 p-3 rounded-md">
+                    <p className="font-semibold">機械番号: {recordToDeleteDetails.machineNumber}</p>
+                    <p className="text-sm text-gray-600">メンテナンス日: {recordToDeleteDetails.date}</p>
+                  </div>
+                )}
+                <p className="text-red-600 font-semibold">この操作は取り消せません。本当に削除しますか？</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleDeleteCancel} disabled={isDeleting}>
+              キャンセル
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? '削除中...' : '削除する'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 }

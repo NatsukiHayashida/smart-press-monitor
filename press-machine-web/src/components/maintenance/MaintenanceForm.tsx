@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { AlertCircle } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface MaintenanceFormProps {
   machineId?: number
@@ -106,19 +107,32 @@ export function MaintenanceForm({
         await onSubmit(formData)
       } else {
         // 新規作成モードの場合
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('maintenance_records')
           .insert(formData)
+          .select()
 
-        if (error) throw error
-        
+        if (error) {
+          console.error('Supabase insert error:', error)
+          throw error
+        }
+
+        console.log('Maintenance record saved successfully:', data)
+        toast.success('メンテナンス記録を保存しました')
+
         if (onSuccess) {
           onSuccess()
         }
       }
     } catch (error: any) {
-      console.error('Submit error:', error)
-      setError(error.message || 'メンテナンス記録の保存に失敗しました')
+      console.error('Submit error details:', {
+        error: error,
+        message: error?.message,
+        details: error?.details,
+        hint: error?.hint,
+        code: error?.code
+      })
+      setError(error?.message || 'メンテナンス記録の保存に失敗しました')
     } finally {
       setLoading(false)
     }

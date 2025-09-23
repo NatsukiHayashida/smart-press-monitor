@@ -10,6 +10,7 @@ import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { AlertCircle } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function MaintenancePage() {
   const supabase = createClient()
@@ -110,6 +111,51 @@ export default function MaintenancePage() {
     }
   }
 
+  const handleDelete = async (id: number) => {
+    if (!orgId) {
+      toast.error('組織が未設定です')
+      throw new Error('Organization ID not found')
+    }
+
+    console.log('Deleting maintenance record:', id)
+
+    // 削除処理
+    const { error: deleteError } = await supabase
+      .from('maintenance_records')
+      .delete()
+      .eq('id', id)
+      .eq('org_id', orgId) // セキュリティのため組織IDでもフィルタリング
+
+    if (deleteError) {
+      console.error('Delete error:', deleteError)
+      toast.error('削除に失敗しました: ' + deleteError.message)
+      throw deleteError
+    }
+
+    toast.success('メンテナンス記録を削除しました')
+
+    // データを再読み込み
+    const { data, error } = await supabase
+      .from('maintenance_records')
+      .select(`
+        *,
+        press_machines (
+          machine_number,
+          manufacturer,
+          model_type
+        )
+      `)
+      .eq('org_id', orgId)
+      .order('maintenance_date', { ascending: false })
+
+    if (error) {
+      console.error('Refresh error:', error)
+      setError(error.message)
+    } else {
+      setRecords(data ?? [])
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -167,8 +213,8 @@ export default function MaintenancePage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <MaintenanceTable 
-          records={records} 
+        <MaintenanceTable
+          records={records}
           onRefresh={() => {
             // 手動リロード
             if (orgId) {
@@ -185,6 +231,7 @@ export default function MaintenancePage() {
             }
           }}
           onNew={() => setShowForm(true)}
+          onDelete={handleDelete}
         />
       </main>
 
