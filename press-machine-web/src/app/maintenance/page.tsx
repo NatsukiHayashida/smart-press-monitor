@@ -55,17 +55,17 @@ export default function MaintenancePage() {
     return () => { mounted = false }
   }, [loading, user, orgId, supabase])
 
-  // Realtime購読
+  // Realtime購読（多重購読を防ぐため依存配列からrecordsを除外）
   useEffect(() => {
-    if (!orgId || records === null) return
-    
+    if (!orgId) return
+
     console.log('Setting up maintenance realtime subscription for org:', orgId)
     const ch = supabase.channel('maintenance_records-ch')
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'maintenance_records', 
-        filter: `org_id=eq.${orgId}` 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'maintenance_records',
+        filter: `org_id=eq.${orgId}`
       }, (payload) => {
         console.log('Maintenance realtime update received:', payload)
         // リロード
@@ -81,12 +81,12 @@ export default function MaintenancePage() {
         })
       })
       .subscribe()
-    
-    return () => { 
+
+    return () => {
       console.log('Cleaning up maintenance realtime subscription')
-      supabase.removeChannel(ch) 
+      supabase.removeChannel(ch)
     }
-  }, [orgId, records, supabase])
+  }, [orgId, supabase])
 
   const handleFormSuccess = () => {
     setShowForm(false)

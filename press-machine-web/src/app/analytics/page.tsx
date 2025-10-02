@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/components/auth/AuthProvider'
-import { createClient } from '@/lib/supabase/client'
-import { getEffectiveOrgId } from '@/lib/org'
 import { Header } from '@/components/layout/Header'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, type ChartConfig } from '@/components/ui/chart'
 import { RefreshCw, BarChart3, Settings, TrendingUp, AlertCircle } from 'lucide-react'
-import { getProductionGroupName } from '@/lib/productionGroups'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
 interface AnalyticsData {
@@ -27,124 +24,35 @@ interface AnalyticsData {
 }
 
 export default function AnalyticsPage() {
-  const { user, profile, loading } = useAuth()
+  const { user, loading } = useAuth()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
-  const supabase = createClient()
-  const orgId = getEffectiveOrgId(profile)
 
   const loadAnalyticsData = async () => {
-    if (!orgId) return
-
+    console.log('🔄 Loading analytics data via API...')
     setIsLoading(true)
     setError(null)
 
     try {
-      // 総台数取得
-      const { count: totalMachines, error: machineCountError } = await supabase
-        .from('press_machines')
-        .select('*', { count: 'exact', head: true })
-        .eq('org_id', orgId)
-
-      if (machineCountError) throw machineCountError
-
-      // 種別別集計
-      const { data: machineTypeData, error: typeError } = await supabase
-        .from('press_machines')
-        .select('machine_type')
-        .eq('org_id', orgId)
-
-      if (typeError) throw typeError
-
-      const machinesByType = (machineTypeData as any[])?.reduce((acc: { [key: string]: number }, machine: any) => {
-        acc[machine.machine_type] = (acc[machine.machine_type] || 0) + 1
-        return acc
-      }, {}) || {}
-
-      // グループ別集計
-      const { data: machineGroupData, error: groupError } = await supabase
-        .from('press_machines')
-        .select('production_group')
-        .eq('org_id', orgId)
-
-      if (groupError) throw groupError
-
-      const machinesByGroup = (machineGroupData as any[])?.reduce((acc: { [key: string]: number }, machine: any) => {
-        const group = getProductionGroupName(machine.production_group)
-        acc[group] = (acc[group] || 0) + 1
-        return acc
-      }, {}) || {}
-
-      // 総メンテナンス記録数
-      const { count: totalMaintenance, error: maintenanceCountError } = await supabase
-        .from('maintenance_records')
-        .select('*', { count: 'exact', head: true })
-        .eq('org_id', orgId)
-
-      if (maintenanceCountError) throw maintenanceCountError
-
-      // 各機械の最新メンテナンス日を集計
-      // まず、機械IDと番号の対応を取得
-      const { data: machineData, error: machineDataError } = await supabase
-        .from('press_machines')
-        .select('id, machine_number')
-        .eq('org_id', orgId)
-      if (machineDataError) throw machineDataError
-
-      const latestMaintenanceByMachine = []
-      for (const machine of (machineData as any[]) || []) {
-        const { data: maintenanceData, error: maintenanceError } = await supabase
-          .from('maintenance_records')
-          .select('maintenance_date')
-          .eq('org_id', orgId)
-          .eq('press_id', machine.id)  // machine_numberではなくpress_idを使用
-          .order('maintenance_date', { ascending: false })
-          .limit(1)
-
-        if (maintenanceError) {
-          console.warn(`Error fetching maintenance for machine ${machine.machine_number} (ID: ${machine.id}):`, maintenanceError)
-        }
-
-        latestMaintenanceByMachine.push({
-          machine_number: machine.machine_number,
-          latest_maintenance: (maintenanceData as any)?.[0]?.maintenance_date || null
-        })
-        console.log(`Machine ${machine.machine_number} (ID: ${machine.id}): Latest maintenance = ${(maintenanceData as any)?.[0]?.maintenance_date || 'None'}`)
-      }
-
-      // 電磁弁交換統計
-      const { data: clutchData, error: clutchError } = await supabase
-        .from('maintenance_records')
-        .select('clutch_valve_replacement')
-        .eq('org_id', orgId)
-        .eq('clutch_valve_replacement', '実施')
-
-      if (clutchError) throw clutchError
-
-      const { data: brakeData, error: brakeError } = await supabase
-        .from('maintenance_records')
-        .select('brake_valve_replacement')
-        .eq('org_id', orgId)
-        .eq('brake_valve_replacement', '実施')
-
-      if (brakeError) throw brakeError
-
-      setAnalyticsData({
-        totalMachines: totalMachines || 0,
-        machinesByType,
-        machinesByGroup,
-        totalMaintenance: totalMaintenance || 0,
-        latestMaintenanceByMachine,
-        valveReplacements: {
-          clutch: clutchData?.length || 0,
-          brake: brakeData?.length || 0
-        }
+      const response = await fetch('/api/analytics', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
 
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch analytics data')
+      }
+
+      const data = await response.json()
+      console.log('✅ Analytics data received:', data)
+      setAnalyticsData(data)
+
     } catch (error: any) {
-      console.error('Analytics data loading error:', error)
+      console.error('❌ Analytics data loading error:', error)
       setError(error.message)
     } finally {
       setIsLoading(false)
@@ -153,10 +61,10 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     if (loading) return
-    if (!user || !orgId) return
-    
+    if (!user) return
+
     loadAnalyticsData()
-  }, [loading, user, orgId])
+  }, [loading, user])
 
   if (loading || isLoading) {
     return (

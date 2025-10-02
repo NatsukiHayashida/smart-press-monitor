@@ -44,17 +44,17 @@ export default function MachinesPage() {
     return () => { mounted = false }
   }, [loading, user, orgId, supabase])
 
-  // Realtime購読は machines の取得後に一度だけ
+  // Realtime購読（多重購読を防ぐため依存配列からmachinesを除外）
   useEffect(() => {
-    if (!orgId || machines === null) return
-    
+    if (!orgId) return
+
     console.log('Setting up realtime subscription for org:', orgId)
     const ch = supabase.channel('press_machines-ch')
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'press_machines', 
-        filter: `org_id=eq.${orgId}` 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'press_machines',
+        filter: `org_id=eq.${orgId}`
       }, (payload) => {
         console.log('Realtime update received:', payload)
         // リロード
@@ -63,12 +63,12 @@ export default function MachinesPage() {
         })
       })
       .subscribe()
-    
-    return () => { 
+
+    return () => {
       console.log('Cleaning up realtime subscription')
-      supabase.removeChannel(ch) 
+      supabase.removeChannel(ch)
     }
-  }, [orgId, machines, supabase])
+  }, [orgId, supabase])
 
   if (loading) {
     return (

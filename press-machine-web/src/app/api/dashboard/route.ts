@@ -136,6 +136,7 @@ export async function GET() {
 
     const res = NextResponse.json(dashboardData, { status: 200 })
     res.headers.set('Server-Timing', `total;dur=${totalDuration}`)
+    res.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate=600')
     return res
   } catch (error: any) {
     console.error('❌ Dashboard API error:', error)

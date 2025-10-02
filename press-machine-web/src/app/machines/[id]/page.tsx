@@ -41,51 +41,51 @@ export default function MachineDetailPage() {
     // loadMaintenanceSchedules() // maintenance_schedulesテーブルが作成されるまでコメントアウト
   }, [loading, user, orgId, machineId])
 
-  // Realtime subscription for maintenance records
+  // Realtime subscription for maintenance records（多重購読防止）
   useEffect(() => {
     if (!orgId || !machineId) return
-    
+
     console.log('Setting up maintenance realtime subscription for machine:', machineId)
     const ch = supabase.channel(`maintenance_records-machine-${machineId}`)
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'maintenance_records', 
-        filter: `press_id=eq.${machineId}` 
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'maintenance_records',
+        filter: `press_id=eq.${machineId}`
       }, (payload) => {
         console.log('Maintenance realtime update received for machine:', payload)
         loadMaintenanceRecords()
       })
       .subscribe()
-    
-    return () => { 
+
+    return () => {
       console.log('Cleaning up maintenance realtime subscription for machine')
-      supabase.removeChannel(ch) 
+      supabase.removeChannel(ch)
     }
   }, [orgId, machineId, supabase])
 
-  // Realtime subscription for maintenance schedules
+  // Realtime subscription for maintenance schedules（多重購読防止）
   useEffect(() => {
     if (!orgId || !machineId) return
-    
+
     console.log('Setting up schedule realtime subscription for machine:', machineId)
-    
+
     try {
       const ch = supabase.channel(`maintenance_schedules-machine-${machineId}`)
-        .on('postgres_changes', { 
-          event: '*', 
-          schema: 'public', 
-          table: 'maintenance_schedules', 
-          filter: `press_id=eq.${machineId}` 
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'maintenance_schedules',
+          filter: `press_id=eq.${machineId}`
         }, (payload) => {
           console.log('Schedule realtime update received for machine:', payload)
           // loadMaintenanceSchedules() // maintenance_schedulesテーブルが作成されるまでコメントアウト
         })
         .subscribe()
-      
-      return () => { 
+
+      return () => {
         console.log('Cleaning up schedule realtime subscription for machine')
-        supabase.removeChannel(ch) 
+        supabase.removeChannel(ch)
       }
     } catch (error) {
       console.log('Could not set up realtime subscription for schedules (table may not exist):', error)
