@@ -74,4 +74,7 @@ temp/
 
 # 📊 Logs
 *.log
-logs/
+logs/.claude/settings.local.json
+.claude/
+.mcp.json
+.env.local
