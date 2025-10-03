@@ -12,6 +12,7 @@ import { useAuth } from '@/components/auth/AuthProvider'
 import { getEffectiveOrgId } from '@/lib/org'
 import { AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
+import { createMaintenanceRecord, updateMaintenanceRecord } from '@/app/maintenance/actions'
 
 interface MaintenanceFormProps {
   machineId?: number
@@ -103,25 +104,29 @@ export function MaintenanceForm({
 
     try {
       if (onSubmit) {
-        // 編集モードの場合
+        // 編集モードの場合（外部から渡されたonSubmitを使用）
         await onSubmit(formData)
       } else {
-        // 新規作成モードの場合
-        const { data, error } = await supabase
-          .from('maintenance_records')
-          .insert(formData)
-          .select()
-
-        if (error) {
-          console.error('Supabase insert error:', error)
-          throw error
+        // 新規作成モードの場合（Server Actionを使用）
+        const recordData = {
+          pressId: formData.press_id,
+          maintenanceDate: formData.maintenance_date,
+          overallJudgment: formData.overall_judgment,
+          clutchValveReplacement: formData.clutch_valve_replacement,
+          brakeValveReplacement: formData.brake_valve_replacement,
+          remarks: formData.remarks || null,
         }
 
-        console.log('Maintenance record saved successfully:', data)
-        toast.success('メンテナンス記録を保存しました')
+        const result = await createMaintenanceRecord(recordData)
 
-        if (onSuccess) {
-          onSuccess()
+        if (result.success) {
+          toast.success('メンテナンス記録を保存しました')
+          if (onSuccess) {
+            onSuccess()
+          }
+        } else {
+          setError(result.error || 'メンテナンス記録の保存に失敗しました')
+          toast.error(result.error || 'メンテナンス記録の保存に失敗しました')
         }
       }
     } catch (error: any) {
@@ -133,6 +138,7 @@ export function MaintenanceForm({
         code: error?.code
       })
       setError(error?.message || 'メンテナンス記録の保存に失敗しました')
+      toast.error(error?.message || 'メンテナンス記録の保存に失敗しました')
     } finally {
       setLoading(false)
     }

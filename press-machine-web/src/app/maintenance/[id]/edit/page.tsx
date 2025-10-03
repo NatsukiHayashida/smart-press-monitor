@@ -10,6 +10,8 @@ import { MaintenanceForm } from '@/components/maintenance/MaintenanceForm'
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { updateMaintenanceRecord } from '@/app/maintenance/actions'
+import { toast } from 'sonner'
 
 interface MaintenanceRecord {
   id: number
@@ -131,33 +133,28 @@ export default function EditMaintenancePage({ params }: { params: Promise<{ id: 
   }
 
   const handleUpdate = async (data: any) => {
-    if (!orgId || !record) return
+    if (!record) return
 
     try {
-      // 編集時に更新すべきでないフィールドを除外
-      const { updated_at, org_id, press_id, created_at, id, ...updateData } = data
-      
-      console.log('Update data being sent:', updateData)
-      console.log('Record ID:', record.id, 'Org ID:', orgId)
-      console.log('Excluded fields:', { updated_at, org_id, press_id, created_at, id })
-
-      const { error: updateError } = await supabase
-        .from('maintenance_records')
-        .update(updateData)
-        .eq('id', record.id)
-        .eq('org_id', orgId)
-
-      if (updateError) {
-        console.error('Supabase update error details:', updateError)
-        throw updateError
+      const recordData = {
+        maintenanceDate: data.maintenance_date,
+        overallJudgment: data.overall_judgment,
+        clutchValveReplacement: data.clutch_valve_replacement,
+        brakeValveReplacement: data.brake_valve_replacement,
+        remarks: data.remarks || null,
       }
 
-      console.log('Update successful, redirecting to maintenance list')
-      // 成功したら一覧ページへ
-      router.push('/maintenance')
+      const result = await updateMaintenanceRecord(record.id, recordData)
+
+      if (result.success) {
+        toast.success('メンテナンス記録を更新しました')
+        router.push('/maintenance')
+      } else {
+        toast.error(result.error || 'メンテナンス記録の更新に失敗しました')
+        throw new Error(result.error || 'メンテナンス記録の更新に失敗しました')
+      }
     } catch (error: any) {
       console.error('Update error full details:', error)
-      // エラーメッセージを改善
       const errorMessage = error.message || error.details || 'メンテナンス記録の更新に失敗しました'
       throw new Error(errorMessage)
     }

@@ -4,14 +4,14 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { useAuth } from '@/components/auth/AuthProvider'
-import { createClient } from '@/lib/supabase/client'
-import { PressMachine, PressMachineInsert } from '@/types/database'
+import { PressMachine } from '@/types/database'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getProductionGroupOptions } from '@/lib/productionGroups'
+import { createPressMachine, updatePressMachine } from '@/app/machines/actions'
+import { toast } from 'sonner'
 
 const machineSchema = z.object({
   machine_number: z.string().min(1, '機械番号は必須です'),
@@ -36,9 +36,7 @@ interface MachineFormProps {
 }
 
 export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) {
-  const { profile } = useAuth()
   const [loading, setLoading] = useState(false)
-  const supabase = createClient()
 
   const {
     register,
@@ -67,42 +65,38 @@ export function MachineForm({ machine, onSuccess, onCancel }: MachineFormProps) 
   const productionGroupValue = watch('production_group')
 
   const onSubmit = async (data: MachineFormData) => {
-    if (!profile?.org_id) return
-
     setLoading(true)
 
     try {
-      const machineData: PressMachineInsert = {
-        ...data,
-        org_id: profile.org_id!,
-        equipment_number: data.equipment_number || null,
+      const machineData = {
+        machineNumber: data.machine_number,
+        equipmentNumber: data.equipment_number || null,
         manufacturer: data.manufacturer || null,
-        model_type: data.model_type || null,
-        serial_number: data.serial_number || null,
+        modelType: data.model_type || null,
+        serialNumber: data.serial_number || null,
+        machineType: data.machine_type,
+        productionGroup: data.production_group,
         tonnage: data.tonnage || null,
       }
 
+      let result
       if (machine) {
         // 更新
-        const { error } = await supabase
-          .from('press_machines')
-          .update(machineData)
-          .eq('id', machine.id)
-
-        if (error) throw error
+        result = await updatePressMachine(machine.id, machineData)
       } else {
         // 新規作成
-        const { error } = await supabase
-          .from('press_machines')
-          .insert(machineData)
-
-        if (error) throw error
+        result = await createPressMachine(machineData)
       }
 
-      onSuccess()
+      if (result.success) {
+        toast.success(machine ? 'プレス機を更新しました' : 'プレス機を登録しました')
+        onSuccess()
+      } else {
+        toast.error(result.error || '保存中にエラーが発生しました')
+      }
     } catch (error) {
       console.error('Error saving machine:', error)
-      alert('保存中にエラーが発生しました')
+      toast.error('保存中にエラーが発生しました')
     } finally {
       setLoading(false)
     }
