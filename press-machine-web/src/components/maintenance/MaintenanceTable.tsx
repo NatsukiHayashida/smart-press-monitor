@@ -121,28 +121,31 @@ export function MaintenanceTable({ records, onRefresh, onNew, onDelete }: Mainte
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
           <CardTitle>メンテナンス記録一覧</CardTitle>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
             <Input
-              placeholder="機械番号、メーカー、判定で検索..."
+              placeholder="検索..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-80"
+              className="w-full sm:w-60 md:w-80"
             />
-            {onRefresh && (
-              <Button onClick={onRefresh} variant="outline">
-                更新
+            <div className="flex gap-2">
+              {onRefresh && (
+                <Button onClick={onRefresh} variant="outline" size="sm" className="flex-1 sm:flex-initial">
+                  更新
+                </Button>
+              )}
+              <Button onClick={onNew} size="sm" className="flex-1 sm:flex-initial">
+                新規登録
               </Button>
-            )}
-            <Button onClick={onNew}>
-              新規登録
-            </Button>
+            </div>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        {/* デスクトップ: テーブル表示 */}
+        <div className="hidden md:block rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -230,7 +233,72 @@ export function MaintenanceTable({ records, onRefresh, onNew, onDelete }: Mainte
             </TableBody>
           </Table>
         </div>
-        
+
+        {/* モバイル: コンパクトなリスト表示 */}
+        <div className="md:hidden">
+          {filteredRecords.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              メンテナンス記録が見つかりません
+            </div>
+          ) : (
+            filteredRecords.map((record) => (
+              <div key={record.id} className="p-3 hover:bg-accent/50 active:bg-accent transition-colors border-b border-gray-200">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-base font-bold truncate">{record.press_machines.machine_number}</h3>
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getJudgmentColor(record.overall_judgment)}`}>
+                        {record.overall_judgment}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {record.press_machines.manufacturer} {record.press_machines.model_type}
+                    </p>
+                  </div>
+                  <div className="flex gap-1 flex-shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(record.id)}
+                      className="h-7 w-7 p-0"
+                      title="編集"
+                    >
+                      <Edit className="w-3.5 h-3.5" />
+                    </Button>
+                    {onDelete && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteClick(record)}
+                        className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                        title="削除"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{new Date(record.maintenance_date).toLocaleDateString('ja-JP')}</span>
+                  <div className="flex gap-2">
+                    <span className={`px-1.5 py-0.5 rounded ${getReplacementColor(record.clutch_valve_replacement)}`}>
+                      クラッチ: {record.clutch_valve_replacement}
+                    </span>
+                    <span className={`px-1.5 py-0.5 rounded ${getReplacementColor(record.brake_valve_replacement)}`}>
+                      ブレーキ: {record.brake_valve_replacement}
+                    </span>
+                  </div>
+                </div>
+                {record.remarks && (
+                  <p className="text-xs text-muted-foreground mt-2 line-clamp-1" title={record.remarks}>
+                    備考: {record.remarks}
+                  </p>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+
         <div className="mt-4 text-sm text-muted-foreground">
           {filteredRecords.length} / {records.length} 件を表示
         </div>

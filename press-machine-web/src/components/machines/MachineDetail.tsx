@@ -17,10 +17,13 @@ export function MachineDetail({ machine }: MachineDetailProps) {
       {/* 基本情報カード */}
       <Card>
         <CardHeader>
-          <CardTitle>基本情報</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-lg">📋</span>
+            基本情報
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-3">
             <div>
               <label className="text-sm font-medium text-gray-500">機械番号</label>
               <p className="text-lg font-semibold text-green-600">{machine.machine_number}</p>
@@ -266,7 +269,10 @@ export function MachineDetail({ machine }: MachineDetailProps) {
       {machine.notes && (
         <Card>
           <CardHeader>
-            <CardTitle>備考・メモ</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-lg">📝</span>
+              備考・メモ
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-gray-700 whitespace-pre-wrap">{machine.notes}</p>
@@ -277,10 +283,13 @@ export function MachineDetail({ machine }: MachineDetailProps) {
       {/* システム情報 */}
       <Card>
         <CardHeader>
-          <CardTitle>システム情報</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <span className="text-lg">💾</span>
+            システム情報
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-500">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-3 text-sm text-gray-500">
             <div>
               <label className="font-medium">登録日時</label>
               <p>{new Date(machine.created_at).toLocaleString('ja-JP')}</p>

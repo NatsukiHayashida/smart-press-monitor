@@ -756,48 +756,40 @@ export default function MachineDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-6">
       <Header />
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* ヘッダーセクション */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/machines" className="no-print">
-                <Button variant="outline">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  戻る
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  プレス機 #{machine.machine_number}
-                </h1>
-                <p className="text-gray-600">
-                  {machine.maker || machine.manufacturer} {machine.model || machine.model_type}
-                </p>
-              </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ヘッダーセクション - スティッキー */}
+        <div className="sticky top-[57px] bg-gray-50/60 backdrop-blur-md z-20 border-b border-gray-200 no-print -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 mb-6">
+          <div className="flex items-center justify-between gap-3 h-[76px] pt-6 pb-4">
+            {/* タイトルセクション */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 truncate">
+                プレス機 #{machine.machine_number}
+              </h1>
+              <p className="text-sm md:text-base text-gray-600 truncate">
+                {machine.maker || machine.manufacturer} {machine.model || machine.model_type}
+              </p>
             </div>
-            <div className="flex items-center space-x-2 no-print">
-              <Button variant="outline" size="sm" onClick={handlePrint}>
-                <Printer className="w-4 h-4 mr-2" />
-                印刷
+
+            {/* アクションボタン（アイコンのみ） */}
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="icon" onClick={handlePrint} title="印刷">
+                <Printer className="w-4 h-4" />
               </Button>
               <Link href={`/machines/${machineId}/edit`}>
-                <Button variant="outline" size="sm">
-                  <Edit className="w-4 h-4 mr-2" />
-                  編集
+                <Button variant="outline" size="icon" title="編集">
+                  <Edit className="w-4 h-4" />
                 </Button>
               </Link>
-              <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" onClick={handleDelete}>
-                <Trash2 className="w-4 h-4 mr-2" />
-                削除
+              <Button variant="outline" size="icon" className="text-red-600 hover:text-red-700" onClick={handleDelete} title="削除">
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
           {/* 詳細情報 - メインコンテンツ */}
           <div className="lg:col-span-2">
             <MachineDetail machine={machine} />
@@ -995,6 +987,18 @@ export default function MachineDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* モバイル専用フッター */}
+      <footer className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-10">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <Link href="/machines" className="block">
+            <Button variant="default" className="w-full">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              プレス機一覧に戻る
+            </Button>
+          </Link>
+        </div>
+      </footer>
     </div>
   )
 }

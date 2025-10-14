@@ -56,27 +56,29 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
   return (
     <Card className="print-card">
       <CardHeader className="print-hide">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
           <CardTitle>プレス機一覧</CardTitle>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
             <Input
-              placeholder="機械番号、メーカー、型式で検索..."
+              placeholder="検索..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-80"
+              className="w-full sm:w-60 md:w-80"
             />
-            <Button onClick={handlePrint} variant="outline" className="flex items-center gap-2">
-              <Printer className="w-4 h-4" />
-              印刷
-            </Button>
-            {onRefresh && (
-              <Button onClick={onRefresh} variant="outline">
-                更新
+            <div className="flex gap-2">
+              <Button onClick={handlePrint} variant="outline" size="sm" className="flex-1 sm:flex-initial items-center gap-2">
+                <Printer className="w-4 h-4" />
+                <span className="hidden sm:inline">印刷</span>
               </Button>
-            )}
-            <Link href="/machines/new">
-              <Button>新規追加</Button>
-            </Link>
+              {onRefresh && (
+                <Button onClick={onRefresh} variant="outline" size="sm" className="flex-1 sm:flex-initial">
+                  更新
+                </Button>
+              )}
+              <Link href="/machines/new" className="flex-1 sm:flex-initial">
+                <Button size="sm" className="w-full">新規追加</Button>
+              </Link>
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -86,7 +88,8 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
         プレス機一覧
       </div>
       <CardContent className="print-compact">
-        <div className="rounded-md border print-no-break print-table-container">
+        {/* デスクトップ: テーブル表示 */}
+        <div className="hidden md:block rounded-md border print-no-break print-table-container">
           <Table className="print-table">
             <TableHeader>
               <TableRow>
@@ -164,6 +167,51 @@ export function MachineTable({ machines, onRefresh }: MachineTableProps) {
               )}
             </TableBody>
           </Table>
+        </div>
+
+        {/* モバイル: コンパクトなリスト表示 */}
+        <div className="md:hidden">
+          {filteredMachines.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              プレス機が見つかりません
+            </div>
+          ) : (
+            filteredMachines.map((machine) => {
+              const groupName = getProductionGroupName(machine.production_group)
+              return (
+                <Link key={machine.id} href={`/machines/${machine.id}`}>
+                  <div className="p-3 hover:bg-accent/50 active:bg-accent transition-colors border-b border-gray-200">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-base font-bold text-green-600 truncate">{machine.machine_number}</h3>
+                          <Badge
+                            variant="outline"
+                            className={`text-xs ${machineTypeColors[machine.machine_type] || machineTypeColors['その他']}`}
+                          >
+                            {machine.machine_type}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {machine.manufacturer} {machine.model_type}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs flex-shrink-0 ${groupColors[groupName] || groupColors['その他']}`}
+                      >
+                        {groupName}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>設備: {machine.equipment_number || '-'}</span>
+                      <span>{machine.tonnage ? `${machine.tonnage}t` : ''}</span>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })
+          )}
         </div>
 
         <div className="mt-4 text-sm text-muted-foreground print-hide">

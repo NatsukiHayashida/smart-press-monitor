@@ -32,7 +32,7 @@ export function SpecificationCard({ title, icon, items }: SpecificationCardProps
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-3">
           {validItems.map((item, index) => (
             <div key={index}>
               <label className="text-sm font-medium text-gray-500">{item.label}</label>

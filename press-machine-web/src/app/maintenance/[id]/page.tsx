@@ -193,41 +193,35 @@ export default function MaintenanceDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-6">
       <Header />
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* ヘッダーセクション */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/maintenance">
-                <Button variant="outline">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  戻る
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <Wrench className="w-8 h-8 mr-3 text-primary" />
-                  メンテナンス記録詳細
-                </h1>
-                <p className="text-gray-600">
-                  記録ID: {record.id} | 実施日: {new Date(record.maintenance_date).toLocaleDateString('ja-JP')}
-                </p>
-              </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ヘッダーセクション - スティッキー */}
+        <div className="sticky top-[57px] bg-gray-50/60 backdrop-blur-md z-20 border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 mb-6">
+          <div className="flex items-center justify-between gap-3 h-[76px] pt-6 pb-4">
+            {/* タイトルセクション */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center">
+                <Wrench className="w-6 h-6 md:w-8 md:h-8 mr-2 md:mr-3 text-primary flex-shrink-0" />
+                <span className="truncate">メンテナンス記録詳細</span>
+              </h1>
+              <p className="text-sm md:text-base text-gray-600 truncate">
+                記録ID: {record.id} | 実施日: {new Date(record.maintenance_date).toLocaleDateString('ja-JP')}
+              </p>
             </div>
-            <div className="flex items-center space-x-2">
+
+            {/* アクションボタン（アイコンのみ） */}
+            <div className="flex items-center gap-2">
               <Link href={`/maintenance/${recordId}/edit`}>
-                <Button variant="outline" size="sm">
-                  <Edit className="w-4 h-4 mr-2" />
-                  編集
+                <Button variant="outline" size="icon" title="編集">
+                  <Edit className="w-4 h-4" />
                 </Button>
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
           {/* メイン情報 */}
           <div className="lg:col-span-2 space-y-6">
             {/* 基本情報 */}
@@ -239,7 +233,7 @@ export default function MaintenanceDetailPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
                   <div>
                     <label className="text-sm font-medium text-gray-600">実施日</label>
                     <p className="text-lg font-semibold">
@@ -429,6 +423,18 @@ export default function MaintenanceDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* モバイル専用フッター */}
+      <footer className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-10">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <Link href="/maintenance" className="block">
+            <Button variant="default" className="w-full">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              メンテナンス記録一覧に戻る
+            </Button>
+          </Link>
+        </div>
+      </footer>
     </div>
   )
 }
