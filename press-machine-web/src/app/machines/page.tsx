@@ -125,9 +125,7 @@ export default function MachinesPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="print-hide">
-        <Header />
-      </div>
+      <Header />
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 print-compact">
         <MachineTable machines={machines} onRefresh={() => {
           // 手動リロード

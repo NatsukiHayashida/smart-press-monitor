@@ -154,9 +154,8 @@ export default function DashboardPage() {
               </h1>
               <p className="text-gray-700 mt-2 leading-relaxed">プレス機管理システムの概要</p>
             </div>
-            <Button onClick={loadDashboardData} disabled={isLoading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              データ更新
+            <Button onClick={loadDashboardData} disabled={isLoading} size="icon" variant="outline" title="データ更新">
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>
