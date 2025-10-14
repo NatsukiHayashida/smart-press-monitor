@@ -33,17 +33,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const loadProfile = async () => {
       try {
         if (user) {
-          // TODO: Clerkユーザー情報からプロファイルを取得
-          // 現時点では簡易的なプロファイル設定
-          setProfile({
-            id: user.id,
-            email: user.primaryEmailAddress?.emailAddress || '',
-            full_name: user.fullName || '',
-            org_id: null,
-            role: 'user',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          } as Profile)
+          // APIからプロファイルを取得
+          const response = await fetch('/api/profile')
+          if (response.ok) {
+            const profileData = await response.json()
+            setProfile(profileData)
+          } else {
+            console.error('プロファイル取得失敗:', response.statusText)
+            setProfile(null)
+          }
         } else {
           setProfile(null)
         }

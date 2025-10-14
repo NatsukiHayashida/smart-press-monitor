@@ -1,9 +1,9 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { currentUser } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
+import { requireAdmin } from '@/lib/permissions'
 
 // Admin Supabaseクライアント（SERVICE_ROLE_KEY使用でRLSバイパス）
 function createAdminSupabaseClient() {
@@ -18,21 +18,6 @@ function createAdminSupabaseClient() {
   })
 }
 
-// 認証チェックヘルパー
-async function checkAuth() {
-  const user = await currentUser()
-  if (!user) {
-    throw new Error('認証が必要です')
-  }
-
-  const orgId = process.env.NEXT_PUBLIC_DEFAULT_ORG_ID
-  if (!orgId) {
-    throw new Error('組織IDが設定されていません')
-  }
-
-  return { userId: user.id, orgId }
-}
-
 export async function createMaintenanceRecord(data: {
   pressId: number
   maintenanceDate: string
@@ -42,7 +27,8 @@ export async function createMaintenanceRecord(data: {
   remarks?: string | null
 }) {
   try {
-    const auth = await checkAuth()
+    // 管理者権限チェック
+    const permissions = await requireAdmin()
     const supabase = createAdminSupabaseClient()
 
     const { data: newRecord, error } = await supabase
@@ -54,7 +40,7 @@ export async function createMaintenanceRecord(data: {
         clutch_valve_replacement: data.clutchValveReplacement,
         brake_valve_replacement: data.brakeValveReplacement,
         remarks: data.remarks,
-        org_id: auth.orgId,
+        org_id: permissions.orgId!,
       })
       .select()
       .single()
@@ -86,7 +72,8 @@ export async function updateMaintenanceRecord(
   }
 ) {
   try {
-    const auth = await checkAuth()
+    // 管理者権限チェック
+    const permissions = await requireAdmin()
     const supabase = createAdminSupabaseClient()
 
     const { data: updatedRecord, error } = await supabase
@@ -99,7 +86,7 @@ export async function updateMaintenanceRecord(
         remarks: data.remarks,
       })
       .eq('id', id)
-      .eq('org_id', auth.orgId)
+      .eq('org_id', permissions.orgId!)
       .select()
       .single()
 
@@ -121,14 +108,15 @@ export async function updateMaintenanceRecord(
 
 export async function deleteMaintenanceRecord(id: number) {
   try {
-    const auth = await checkAuth()
+    // 管理者権限チェック
+    const permissions = await requireAdmin()
     const supabase = createAdminSupabaseClient()
 
     const { error } = await supabase
       .from('maintenance_records')
       .delete()
       .eq('id', id)
-      .eq('org_id', auth.orgId)
+      .eq('org_id', permissions.orgId!)
 
     if (error) {
       console.error('❌ メンテナンス記録削除エラー:', error)

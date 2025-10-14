@@ -44,14 +44,25 @@ export function Header() {
           <div className="flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {user.email}
-                  </span>
+                <div className="flex items-center space-x-2 bg-muted/50 px-3 py-2 rounded-md">
+                  <User className="w-5 h-5 text-primary" />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-foreground">
+                      {profile?.email || user.email}
+                    </span>
+                    {profile?.role && (
+                      <span className={`text-xs ${
+                        profile.role === 'admin'
+                          ? 'text-primary font-semibold'
+                          : 'text-muted-foreground'
+                      }`}>
+                        {profile.role === 'admin' ? '管理者' : '閲覧者'}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={signOut}
                   className="flex items-center space-x-2"

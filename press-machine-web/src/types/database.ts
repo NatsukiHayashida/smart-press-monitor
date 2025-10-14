@@ -24,6 +24,7 @@ export interface Database {
           org_id: string | null
           email: string | null
           full_name: string | null
+          role: string | null
           created_at: string
         }
         Insert: {
@@ -31,6 +32,7 @@ export interface Database {
           org_id?: string | null
           email?: string | null
           full_name?: string | null
+          role?: string | null
           created_at?: string
         }
         Update: {
@@ -38,6 +40,7 @@ export interface Database {
           org_id?: string | null
           email?: string | null
           full_name?: string | null
+          role?: string | null
           created_at?: string
         }
       }

@@ -1,9 +1,9 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { currentUser } from '@clerk/nextjs/server'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
+import { requireAdmin } from '@/lib/permissions'
 
 // Admin Supabaseクライアント（SERVICE_ROLE_KEY使用でRLSバイパス）
 function createAdminSupabaseClient() {
@@ -18,21 +18,6 @@ function createAdminSupabaseClient() {
   })
 }
 
-// 認証チェックヘルパー
-async function checkAuth() {
-  const user = await currentUser()
-  if (!user) {
-    throw new Error('認証が必要です')
-  }
-
-  const orgId = process.env.NEXT_PUBLIC_DEFAULT_ORG_ID
-  if (!orgId) {
-    throw new Error('組織IDが設定されていません')
-  }
-
-  return { userId: user.id, orgId }
-}
-
 export async function createPressMachine(data: {
   machineNumber: string
   equipmentNumber?: string | null
@@ -44,7 +29,8 @@ export async function createPressMachine(data: {
   tonnage?: number | null
 }) {
   try {
-    const auth = await checkAuth()
+    // 管理者権限チェック
+    const permissions = await requireAdmin()
     const supabase = createAdminSupabaseClient()
 
     const { data: newMachine, error } = await supabase
@@ -58,7 +44,7 @@ export async function createPressMachine(data: {
         machine_type: data.machineType,
         production_group: data.productionGroup,
         tonnage: data.tonnage,
-        org_id: auth.orgId,
+        org_id: permissions.orgId!,
       })
       .select()
       .single()
@@ -103,7 +89,8 @@ export async function updatePressMachine(
   }
 ) {
   try {
-    const auth = await checkAuth()
+    // 管理者権限チェック
+    const permissions = await requireAdmin()
     const supabase = createAdminSupabaseClient()
 
     const { data: updatedMachine, error } = await supabase
@@ -119,7 +106,7 @@ export async function updatePressMachine(
         tonnage: data.tonnage,
       })
       .eq('id', id)
-      .eq('org_id', auth.orgId)
+      .eq('org_id', permissions.orgId!)
       .select()
       .single()
 
@@ -146,14 +133,15 @@ export async function updatePressMachine(
 
 export async function deletePressMachine(id: number) {
   try {
-    const auth = await checkAuth()
+    // 管理者権限チェック
+    const permissions = await requireAdmin()
     const supabase = createAdminSupabaseClient()
 
     const { error } = await supabase
       .from('press_machines')
       .delete()
       .eq('id', id)
-      .eq('org_id', auth.orgId)
+      .eq('org_id', permissions.orgId!)
 
     if (error) {
       console.error('❌ プレス機削除エラー:', error)

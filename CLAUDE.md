@@ -249,6 +249,30 @@ const { data: machines } = await supabase
 
 ## 最近の主要な変更
 
+### 2025-10-14: Clerk認証 - profiles.user_id型の修正
+
+**問題発見：**
+- ClerkユーザーID（`user_XXXXXXXXXX`）がUUID型のカラムに挿入できない
+- エラー: `invalid input syntax for type uuid: "user_32lUb9bOD1CHFlgG07jsfNAuJUG"`
+- プロファイル自動作成が常に失敗
+
+**実装した修正：**
+1. **`database/fix_user_id_type.sql`** - profiles.user_idをUUIDからTEXTに変更
+2. **`database/FIX_USER_ID_TYPE_GUIDE.md`** - 修正手順の詳細ガイド
+3. **`database/supabase_schema.sql`** - スキーマ定義を更新（TEXT型 + roleカラム追加）
+4. **`src/lib/permissions.ts`** - 詳細なデバッグログを追加
+
+**影響：**
+- Supabaseでスキーマ修正が必要（`fix_user_id_type.sql`を実行）
+- 既存のUUID形式のプロファイルは削除が必要
+- Clerk認証との完全な互換性を実現
+
+**変更ファイル：**
+- `database/fix_user_id_type.sql` (新規)
+- `database/FIX_USER_ID_TYPE_GUIDE.md` (新規)
+- `database/supabase_schema.sql` (更新)
+- `docs/PROFILE_DEBUG_GUIDE.md` (更新)
+
 ### 2025-10-02: 大規模パフォーマンス最適化 - N+1クエリ解消とキャッシュ戦略
 **問題調査：**
 - Supabase Query Performance分析で `realtime.list_changes()` が全体DB時間の93.4%を占有

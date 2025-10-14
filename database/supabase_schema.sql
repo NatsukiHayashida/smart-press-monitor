@@ -12,11 +12,13 @@ create table if not exists orgs (
 );
 
 -- プロフィールテーブル（ユーザーと組織の関連付け）
+-- Clerk認証使用のため、user_idはtext型（auth.usersへの参照なし）
 create table if not exists profiles (
-  user_id uuid primary key references auth.users(id) on delete cascade,
+  user_id text primary key,  -- Clerk User ID（例: user_XXXXXXXXXX）
   org_id uuid references orgs(id) on delete set null,
   email text,
   full_name text,
+  role text default 'viewer',  -- ロール: admin または viewer
   created_at timestamptz default now()
 );
 
