@@ -1,7 +1,7 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { clerkClient } from '@clerk/nextjs/server'
+import { createClerkClient } from '@clerk/nextjs/server'
 
 export async function POST(req: Request) {
   // Webhook secretを取得
@@ -85,8 +85,21 @@ export async function POST(req: Request) {
       console.log(`🚫 許可されていないドメイン: ${emailAddress}`)
 
       try {
+        // CLERK_SECRET_KEYを確認
+        const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY
+
+        if (!CLERK_SECRET_KEY) {
+          console.error('❌ CLERK_SECRET_KEY環境変数が設定されていません')
+          throw new Error('CLERK_SECRET_KEY is not configured')
+        }
+
+        console.log('✅ CLERK_SECRET_KEY is configured')
+
+        // Clerk clientを明示的に作成
+        const client = createClerkClient({ secretKey: CLERK_SECRET_KEY })
+        console.log('✅ Clerk client created successfully')
+
         // ユーザーを削除
-        const client = clerkClient()
         await client.users.deleteUser(id)
         console.log(`✅ ユーザーを削除しました: ${emailAddress}`)
 
