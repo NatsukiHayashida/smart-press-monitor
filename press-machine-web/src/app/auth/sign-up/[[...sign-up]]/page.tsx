@@ -72,7 +72,7 @@ export default function SignUpPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-[400px]">
         {/* ドメイン制限のお知らせ - Clerkスタイルに合わせる */}
         <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-start gap-3">
