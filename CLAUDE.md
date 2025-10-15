@@ -193,6 +193,48 @@ const { data: machines } = await supabase
   .in('id', pressIds)
 ```
 
+#### Clerk Webhookパターン
+```typescript
+// Webhookエンドポイントの実装 (src/app/api/webhooks/clerk/route.ts)
+import { Webhook } from 'svix'
+import { headers } from 'next/headers'
+import { WebhookEvent } from '@clerk/nextjs/server'
+import { createClerkClient } from '@clerk/nextjs/server'
+
+export async function POST(req: Request) {
+  // 1. Webhook secretを検証
+  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
+  if (!WEBHOOK_SECRET) {
+    return new Response('Error: CLERK_WEBHOOK_SECRET not configured', { status: 500 })
+  }
+
+  // 2. Svixヘッダーを取得
+  const headerPayload = await headers()
+  const svix_id = headerPayload.get('svix-id')
+  const svix_timestamp = headerPayload.get('svix-timestamp')
+  const svix_signature = headerPayload.get('svix-signature')
+
+  // 3. Webhookを検証
+  const wh = new Webhook(WEBHOOK_SECRET)
+  const payload = await req.json()
+  const evt = wh.verify(JSON.stringify(payload), {
+    'svix-id': svix_id!,
+    'svix-timestamp': svix_timestamp!,
+    'svix-signature': svix_signature!,
+  }) as WebhookEvent
+
+  // 4. イベント処理
+  if (evt.type === 'user.created') {
+    const { id, email_addresses } = evt.data
+    // ビジネスロジックを実装
+  }
+
+  return new Response('Webhook processed', { status: 200 })
+}
+```
+
+**重要**: Webhookエンドポイントは必ず `middleware.ts` でパブリックルートに追加すること。
+
 ### MCPツールの活用
 
 このプロジェクトでは以下のMCPツールが統合されています：
@@ -232,12 +274,15 @@ const { data: machines } = await supabase
 ### 環境変数
 
 `.env.local`に必要：
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk公開キー
-- `CLERK_SECRET_KEY` - Clerkシークレットキー
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk公開キー（本番: `pk_live_`, 開発: `pk_test_`）
+- `CLERK_SECRET_KEY` - Clerkシークレットキー（本番: `sk_live_`, 開発: `sk_test_`）
+- `CLERK_WEBHOOK_SECRET` - Webhook Signing Secret（`whsec_`で始まる）
 - `NEXT_PUBLIC_SUPABASE_URL` - SupabaseプロジェクトURL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase匿名キー
 - `SUPABASE_SERVICE_ROLE_KEY` - Admin権限用（パフォーマンス最適化API用）
 - `NEXT_PUBLIC_DEFAULT_ORG_ID` - デフォルト組織ID（UUID形式）
+
+**重要**: 本番環境（Vercel）では必ず `pk_live_` と `sk_live_` を使用すること。開発キーは本番では動作しません。
 
 ### パフォーマンス監視
 
@@ -248,6 +293,49 @@ const { data: machines } = await supabase
 - **Network > Server-Timing**ヘッダーで詳細確認
 
 ## 最近の主要な変更
+
+### 2025-10-15: ドメイン制限機能の実装
+
+**目的：**
+- 新規サインアップを `@iidzka.co.jp` ドメインのみに制限
+- 既存ユーザー `ibron1975@gmail.com` を例外として許可
+- ユーザーエクスペリエンスの向上
+
+**実装内容：**
+
+1. **Clerk Webhookエンドポイント** (`src/app/api/webhooks/clerk/route.ts`)
+   - `user.created` イベントでドメインチェック
+   - 不正なドメインのユーザーを自動削除
+   - `createClerkClient({ secretKey })` で明示的にクライアント作成
+   - 詳細なログ出力（環境変数、イベント、メール、ドメインチェック結果）
+
+2. **サインアップページ改善** (`src/app/auth/sign-up/[[...sign-up]]/page.tsx`)
+   - ClerkのUIに合わせたデザイン（白いカード、400px幅）
+   - 事前通知バナーで許可ドメインを明示
+   - クライアント側のリアルタイムドメイン検証
+   - 不正ドメイン入力時に即座にエラー表示
+
+3. **Webhook設定ドキュメント** (`docs/CLERK_WEBHOOK_SETUP.md`)
+   - Clerk DashboardでのWebhook設定手順
+   - Vercel環境変数設定方法
+   - トラブルシューティングガイド
+
+**3層の防御機構：**
+- フロントエンド: サインアップページでの事前通知とリアルタイム検証
+- Webhook: サーバー側での自動削除（バックエンド検証）
+- 視覚的フィードバック: 明確なエラーメッセージとClerk UI統一デザイン
+
+**変更ファイル：**
+- `src/app/api/webhooks/clerk/route.ts` (新規)
+- `src/app/auth/sign-up/[[...sign-up]]/page.tsx` (大幅改善)
+- `src/middleware.ts` (Webhookエンドポイントをパブリックルートに追加)
+- `docs/CLERK_WEBHOOK_SETUP.md` (新規)
+- `package.json` (svixパッケージ追加)
+
+**注意事項：**
+- Vercel環境変数に `CLERK_WEBHOOK_SECRET` が必須
+- 本番環境では `pk_live_` と `sk_live_` キーを使用
+- Webhook URLは `https://smart-press-monitor.vercel.app/api/webhooks/clerk`
 
 ### 2025-10-14: Clerk認証 - profiles.user_id型の修正
 
