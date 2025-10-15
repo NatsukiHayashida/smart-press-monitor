@@ -8,8 +8,13 @@ export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
-    throw new Error('CLERK_WEBHOOK_SECRET環境変数が設定されていません')
+    console.error('❌ CLERK_WEBHOOK_SECRET環境変数が設定されていません')
+    return new Response('Error: CLERK_WEBHOOK_SECRET not configured', {
+      status: 500,
+    })
   }
+
+  console.log('✅ CLERK_WEBHOOK_SECRET is configured')
 
   // ヘッダーを取得
   const headerPayload = await headers()
@@ -49,10 +54,12 @@ export async function POST(req: Request) {
 
   // イベントタイプを取得
   const eventType = evt.type
+  console.log(`📩 Webhook received: ${eventType}`)
 
   // user.createdイベントを処理
   if (eventType === 'user.created') {
     const { id, email_addresses } = evt.data
+    console.log(`👤 Processing user: ${id}`)
 
     // プライマリメールアドレスを取得
     const primaryEmail = email_addresses.find((email) => email.id === evt.data.primary_email_address_id)
@@ -66,16 +73,20 @@ export async function POST(req: Request) {
     const allowedDomain = '@iidzka.co.jp'
     const exceptionEmail = 'ibron1975@gmail.com'
 
+    console.log(`📧 Email: ${emailAddress}`)
+
     // ドメインチェック
     const isAllowedDomain = emailAddress.endsWith(allowedDomain)
     const isException = emailAddress === exceptionEmail
+
+    console.log(`🔍 Domain check: allowed=${isAllowedDomain}, exception=${isException}`)
 
     if (!isAllowedDomain && !isException) {
       console.log(`🚫 許可されていないドメイン: ${emailAddress}`)
 
       try {
         // ユーザーを削除
-        const client = await clerkClient()
+        const client = clerkClient()
         await client.users.deleteUser(id)
         console.log(`✅ ユーザーを削除しました: ${emailAddress}`)
 
@@ -87,8 +98,15 @@ export async function POST(req: Request) {
           { status: 200, headers: { 'Content-Type': 'application/json' } }
         )
       } catch (error) {
-        console.error('ユーザー削除エラー:', error)
-        return new Response('Error: Failed to delete user', { status: 500 })
+        console.error('❌ ユーザー削除エラー:', error)
+        console.error('Error details:', JSON.stringify(error, null, 2))
+        return new Response(
+          JSON.stringify({
+            error: 'Failed to delete user',
+            details: error instanceof Error ? error.message : 'Unknown error'
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } }
+        )
       }
     }
 
