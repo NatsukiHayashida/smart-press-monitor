@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#1e40af"/>
+
+  <!-- Press Machine Shape -->
+  <!-- Top Plate -->
+  <rect x="140" y="120" width="232" height="40" rx="4" fill="#93c5fd"/>
+
+  <!-- Hydraulic Column Left -->
+  <rect x="160" y="160" width="32" height="120" fill="#60a5fa"/>
+
+  <!-- Hydraulic Column Right -->
+  <rect x="320" y="160" width="32" height="120" fill="#60a5fa"/>
+
+  <!-- Press Head -->
+  <path d="M 200 280 L 312 280 L 280 340 L 232 340 Z" fill="#3b82f6"/>
+
+  <!-- Base Plate -->
+  <rect x="120" y="360" width="272" height="32" rx="4" fill="#93c5fd"/>
+
+  <!-- Decorative Bolts -->
+  <circle cx="150" cy="135" r="6" fill="#dbeafe"/>
+  <circle cx="362" cy="135" r="6" fill="#dbeafe"/>
+  <circle cx="150" cy="376" r="6" fill="#dbeafe"/>
+  <circle cx="362" cy="376" r="6" fill="#dbeafe"/>
+
+  <!-- P Letter (Stylized) -->
+  <text x="256" y="280" font-family="Arial, sans-serif" font-size="140" font-weight="bold" fill="#dbeafe" text-anchor="middle" opacity="0.2">P</text>
+</svg>
